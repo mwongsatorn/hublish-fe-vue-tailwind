@@ -1,26 +1,48 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
 import { type ZodFormattedError } from 'zod'
-import { SignUpSchema, type SignUp } from '@/schemas/user'
+import { SignUpSchema, UserResponseSchema, type SignUp, type UserResponse } from '@/schemas/user'
 
-const signUpForm = ref<SignUp>({
+const router = useRouter()
+
+const signupForm = ref<SignUp>({
   username: '',
   password: '',
   confirmPassword: '',
   email: ''
 })
 
+const signupError = ref<UserResponse | null>()
+const apiError = ref('')
 const formError = ref<ZodFormattedError<SignUp> | null>(null)
 
-function signupSubmit() {
-  const result = SignUpSchema.safeParse(signUpForm.value)
-  if (!result.success) {
-    formError.value = result.error.format()
-    return
+async function signupSubmit() {
+  try {
+    const result = SignUpSchema.safeParse(signupForm.value)
+
+    if (!result.success) {
+      formError.value = result.error.format()
+      return
+    }
+    const response = await axios
+      .post('http://localhost:8080/api/users/signup', signupForm.value)
+      .then((res) => UserResponseSchema.safeParse(res.data))
+    if (!response.success) {
+      apiError.value = 'Someting went wrong. Please try again later'
+      return
+    }
+    alert(response.data.message)
+    router.push('/')
+  } catch (e) {
+    if (axios.isAxiosError(e)) {
+      apiError.value = e.response?.data.error
+    }
   }
 }
 
-watch(signUpForm.value, () => {
+watch(signupForm.value, () => {
   formError.value = null
 })
 </script>
@@ -32,11 +54,14 @@ watch(signUpForm.value, () => {
     >
       <div class="max-w-md w-full py-12 px-6 shadow-lg border">
         <h1 class="font-bold text-2xl text-center">Sign up</h1>
+        <p class="text-red mt-4" v-if="signupError || apiError">
+          {{ signupError ? signupError.message : apiError }}
+        </p>
         <form class="" @submit.prevent="signupSubmit()">
           <div class="mt-4">
             <label for="email">Email</label>
             <input
-              v-model="signUpForm.email"
+              v-model="signupForm.email"
               id="email"
               class="block w-full mt-2 border-2 px-4 py-1.5"
               :class="formError?.email ? 'border-red-700' : ''"
@@ -50,7 +75,7 @@ watch(signUpForm.value, () => {
           <div class="mt-4">
             <label for="username">Username</label>
             <input
-              v-model="signUpForm.username"
+              v-model="signupForm.username"
               id="username"
               class="block w-full mt-2 border-2 px-4 py-1.5"
               :class="formError?.username ? 'border-red-700' : ''"
@@ -64,7 +89,7 @@ watch(signUpForm.value, () => {
           <div class="mt-4">
             <label for="password">Password</label>
             <input
-              v-model="signUpForm.password"
+              v-model="signupForm.password"
               id="password"
               class="block w-full mt-2 border-2 px-4 py-2"
               :class="formError?.password ? 'border-red-700' : ''"
@@ -78,7 +103,7 @@ watch(signUpForm.value, () => {
           <div class="mt-4">
             <label for="password">Confirm password</label>
             <input
-              v-model="signUpForm.confirmPassword"
+              v-model="signupForm.confirmPassword"
               id="confirm-password"
               class="block w-full mt-2 border-2 px-4 py-2"
               :class="formError?.confirmPassword ? 'border-red-700' : ''"

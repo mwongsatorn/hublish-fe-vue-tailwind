@@ -25,6 +25,5 @@ export const SignUpSchema = z
 
 export type UserResponse = z.infer<typeof UserResponseSchema>
 export const UserResponseSchema = z.object({
-  status: z.number(),
   message: z.string()
 })
