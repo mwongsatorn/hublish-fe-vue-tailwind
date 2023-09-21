@@ -27,3 +27,14 @@ export type UserResponse = z.infer<typeof UserResponseSchema>
 export const UserResponseSchema = z.object({
   message: z.string()
 })
+
+export type LogIn = z.infer<typeof LogInSchema>
+export const LogInSchema = z.object({
+  username: z.string().nonempty({ message: 'Username is required' }),
+  password: z.string().nonempty({ message: 'Password is required' })
+})
+
+export type LogInResponse = z.infer<typeof LogInResponseSchema>
+export const LogInResponseSchema = z.object({
+  accessToken: z.string()
+})
