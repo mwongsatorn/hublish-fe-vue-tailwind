@@ -34,7 +34,13 @@ export const LogInSchema = z.object({
   password: z.string().nonempty({ message: 'Password is required' })
 })
 
-export type LogInResponse = z.infer<typeof LogInResponseSchema>
-export const LogInResponseSchema = z.object({
+const LoginSuccess = z.object({
+  status: z.literal(true),
   accessToken: z.string()
 })
+const LoginError = z.object({
+  status: z.literal(false),
+  error: z.string()
+})
+export type LogInResponse = z.infer<typeof LogInResponseSchema>
+export const LogInResponseSchema = z.discriminatedUnion('status', [LoginSuccess, LoginError])

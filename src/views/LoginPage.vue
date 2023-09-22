@@ -1,40 +1,32 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user.store'
 import { type ZodFormattedError } from 'zod'
-import { LogInSchema, type LogIn, LogInResponseSchema } from '@/schemas/user'
-import axios from 'axios'
+import { LogInSchema, type LogIn } from '@/schemas/user'
 
-const loginForm = ref({
+const router = useRouter()
+
+const loginForm = ref<LogIn>({
   username: '',
   password: ''
 })
 
 const formError = ref<ZodFormattedError<LogIn> | null>(null)
 const loginError = ref<string | null>(null)
-const apiError = ref('')
 
 async function loginSubmit() {
-  try {
-    const result = LogInSchema.safeParse(loginForm.value)
-    if (!result.success) {
-      formError.value = result.error.format()
-      return
-    }
-    const response = await axios
-      .post('http://localhost:8080/api/users/login', loginForm.value)
-      .then((res) => LogInResponseSchema.safeParse(res.data))
-
-    if (!response.success) {
-      apiError.value = 'Something went wrong. Please try again later'
-      return
-    }
-    localStorage.setItem('accessToken', response.data.accessToken)
-  } catch (e) {
-    if (axios.isAxiosError(e)) {
-      console.log(e.response?.data)
-      loginError.value = e.response?.data.message as string
-    }
+  const validate = LogInSchema.safeParse(loginForm.value)
+  if (!validate.success) {
+    formError.value = validate.error.format()
+    return
   }
+  const user = useUserStore()
+  const data = await user.login(validate.data)
+  if (data.status) {
+    console.log(user.accessToken)
+    router.push('/')
+  } else loginError.value = data.error
 }
 
 watch(loginForm.value, () => {
@@ -49,8 +41,8 @@ watch(loginForm.value, () => {
     >
       <div class="max-w-md w-full py-12 px-6 shadow-lg border">
         <h1 class="font-bold text-2xl text-center">Log in</h1>
-        <p class="mt-4 text-red-700 text-center" v-if="loginError || apiError">
-          {{ apiError ? apiError : loginError }}
+        <p class="mt-4 text-red-700 text-center" v-if="loginError">
+          {{ loginError }}
         </p>
         <form class="" @submit.prevent="loginSubmit()">
           <div class="mt-4">
