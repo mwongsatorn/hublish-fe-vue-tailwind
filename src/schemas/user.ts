@@ -23,10 +23,16 @@ export const SignUpSchema = z
     path: ['confirmPassword']
   })
 
-export type UserResponse = z.infer<typeof UserResponseSchema>
-export const UserResponseSchema = z.object({
+const SignUpSuccess = z.object({
+  status: z.literal(true),
   message: z.string()
 })
+const SignUpError = z.object({
+  status: z.literal(false),
+  error: z.string()
+})
+
+export const SignUpResponseSchema = z.discriminatedUnion('status', [SignUpSuccess, SignUpError])
 
 export type LogIn = z.infer<typeof LogInSchema>
 export const LogInSchema = z.object({
@@ -42,5 +48,5 @@ const LoginError = z.object({
   status: z.literal(false),
   error: z.string()
 })
-export type LogInResponse = z.infer<typeof LogInResponseSchema>
+
 export const LogInResponseSchema = z.discriminatedUnion('status', [LoginSuccess, LoginError])

@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { type ZodFormattedError } from 'zod'
-import { SignUpSchema, UserResponseSchema, type SignUp, type UserResponse } from '@/schemas/user'
+import { SignUpSchema, SignUpResponseSchema, type SignUp } from '@/schemas/user'
 
 const router = useRouter()
 
@@ -14,31 +14,31 @@ const signupForm = ref<SignUp>({
   email: ''
 })
 
-const signupError = ref<UserResponse | null>()
-const apiError = ref('')
 const formError = ref<ZodFormattedError<SignUp> | null>(null)
+const signupError = ref<string | null>()
 
 async function signupSubmit() {
-  try {
-    const result = SignUpSchema.safeParse(signupForm.value)
+  const validateForm = SignUpSchema.safeParse(signupForm.value)
 
-    if (!result.success) {
-      formError.value = result.error.format()
-      return
-    }
-    const response = await axios
-      .post('http://localhost:8080/api/users/signup', signupForm.value)
-      .then((res) => UserResponseSchema.safeParse(res.data))
-    if (!response.success) {
-      apiError.value = 'Someting went wrong. Please try again later'
-      return
-    }
-    alert(response.data.message)
-    router.push('/')
-  } catch (e) {
-    if (axios.isAxiosError(e)) {
-      apiError.value = e.response?.data.error
-    }
+  if (!validateForm.success) {
+    formError.value = validateForm.error.format()
+    return
+  }
+  const response = await axios.post('http://localhost:8080/api/users/signup', validateForm.data)
+
+  const validateResponse = SignUpResponseSchema.safeParse(response.data)
+
+  if (!validateResponse.success) {
+    signupError.value = 'Something went wrong, please try again later.'
+    return
+  }
+
+  const { data } = validateResponse
+  if (data.status) {
+    alert(data.message)
+    router.push('/login')
+  } else {
+    signupError.value = data.error
   }
 }
 
@@ -54,8 +54,8 @@ watch(signupForm.value, () => {
     >
       <div class="max-w-md w-full py-12 px-6 shadow-lg border">
         <h1 class="font-bold text-2xl text-center">Sign up</h1>
-        <p class="text-red mt-4" v-if="signupError || apiError">
-          {{ signupError ? signupError.message : apiError }}
+        <p class="text-red mt-4" v-if="signupError">
+          {{ signupError }}
         </p>
         <form class="" @submit.prevent="signupSubmit()">
           <div class="mt-4">
