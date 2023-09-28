@@ -42,7 +42,13 @@ export const LogInSchema = z.object({
 
 const LoginSuccess = z.object({
   status: z.literal(true),
-  accessToken: z.string()
+  user: z.object({
+    accessToken: z.string(),
+    email: z.string(),
+    username: z.string(),
+    name: z.string(),
+    bio: z.string()
+  })
 })
 const LoginError = z.object({
   status: z.literal(false),
