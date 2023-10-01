@@ -4,8 +4,12 @@ import AppHeader from '@/components/AppHeader.vue'
 </script>
 
 <template>
-  <AppHeader></AppHeader>
-  <RouterView></RouterView>
+  <Suspense>
+    <div>
+      <AppHeader></AppHeader>
+      <RouterView></RouterView>
+    </div>
+  </Suspense>
 </template>
 
 <style></style>

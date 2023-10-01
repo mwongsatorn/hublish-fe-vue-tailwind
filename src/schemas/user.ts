@@ -56,3 +56,12 @@ const LoginError = z.object({
 })
 
 export const LogInResponseSchema = z.discriminatedUnion('status', [LoginSuccess, LoginError])
+
+export const ProfileSchema = z.object({
+  profile: z.object({
+    username: z.string(),
+    name: z.string(),
+    email: z.string(),
+    bio: z.string()
+  })
+})

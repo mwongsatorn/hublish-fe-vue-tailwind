@@ -6,11 +6,14 @@ import IconChevronDown from '@/components/icons/ChevronDown.vue'
 
 const user = useUserStore()
 
+if (!user.isLoggedIn) {
+  await user.refreshAccessToken()
+}
+
 const isMenuOpened = ref(false)
 const menu = ref<HTMLElement | null>(null)
 
 function handleClickOutside(e: MouseEvent) {
-  console.log(isMenuOpened.value)
   if (e.target instanceof HTMLElement && !menu.value?.contains(e.target)) isMenuOpened.value = false
 }
 
@@ -41,8 +44,7 @@ onUnmounted(() => {
       >
         <div class="h-10 w-10 rounded-full bg-gray-300" />
         <div class="sm:block hidden">
-          <span v-if="user.user?.name">{{ user.user?.name }}</span>
-          <span v-else>{{ user.user?.username }}</span>
+          <span>{{ user.user?.username }}</span>
         </div>
         <div>
           <IconChevronDown class="h-6 w-6"></IconChevronDown>
@@ -52,6 +54,12 @@ onUnmounted(() => {
           ref="menu"
           class="w-full min-w-[200px] bg-white absolute top-[140%] right-0 p-2"
         >
+          <RouterLink
+            class="px-4 py-2 block text-center hover:bg-gray-200"
+            :to="`/profile/${user.user.username}`"
+          >
+            Profile
+          </RouterLink>
           <RouterLink class="px-4 py-2 block text-center hover:bg-gray-200" :to="`/settings`">
             Settings
           </RouterLink>
