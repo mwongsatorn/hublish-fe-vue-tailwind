@@ -23,25 +23,13 @@ export const SignUpSchema = z
     path: ['confirmPassword']
   })
 
-const SignUpSuccess = z.object({
-  status: z.literal(true),
-  message: z.string()
-})
-const SignUpError = z.object({
-  status: z.literal(false),
-  error: z.string()
-})
-
-export const SignUpResponseSchema = z.discriminatedUnion('status', [SignUpSuccess, SignUpError])
-
 export type LogIn = z.infer<typeof LogInSchema>
 export const LogInSchema = z.object({
   username: z.string().nonempty({ message: 'Username is required' }),
   password: z.string().nonempty({ message: 'Password is required' })
 })
 
-const LoginSuccess = z.object({
-  status: z.literal(true),
+export const LogInResponseSchema = z.object({
   user: z.object({
     accessToken: z.string(),
     email: z.string(),
@@ -50,12 +38,6 @@ const LoginSuccess = z.object({
     bio: z.string()
   })
 })
-const LoginError = z.object({
-  status: z.literal(false),
-  error: z.string()
-})
-
-export const LogInResponseSchema = z.discriminatedUnion('status', [LoginSuccess, LoginError])
 
 export const ProfileSchema = z.object({
   profile: z.object({

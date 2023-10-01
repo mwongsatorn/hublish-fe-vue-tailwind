@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { type ZodFormattedError } from 'zod'
-import { SignUpSchema, SignUpResponseSchema, type SignUp } from '@/schemas/user'
+import { SignUpSchema, type SignUp } from '@/schemas/user'
 
 const router = useRouter()
 
@@ -15,7 +15,7 @@ const signupForm = ref<SignUp>({
 })
 
 const formError = ref<ZodFormattedError<SignUp> | null>(null)
-const signupError = ref<string | null>()
+const signupError = ref('')
 
 async function signupSubmit() {
   const validateForm = SignUpSchema.safeParse(signupForm.value)
@@ -26,20 +26,13 @@ async function signupSubmit() {
   }
   const response = await axios.post('http://localhost:8080/api/users/signup', validateForm.data)
 
-  const validateResponse = SignUpResponseSchema.safeParse(response.data)
-
-  if (!validateResponse.success) {
-    signupError.value = 'Something went wrong, please try again later.'
+  if (response.status === 200) {
+    signupError.value = response.data.error
     return
   }
 
-  const { data } = validateResponse
-  if (data.status) {
-    alert(data.message)
-    router.push('/login')
-  } else {
-    signupError.value = data.error
-  }
+  alert('Sign up successfully')
+  router.push('/login')
 }
 
 watch(signupForm.value, () => {

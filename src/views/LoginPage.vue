@@ -13,20 +13,22 @@ const loginForm = ref<LogIn>({
 })
 
 const formError = ref<ZodFormattedError<LogIn> | null>(null)
-const loginError = ref<string | null>(null)
+const loginError = ref('')
 
 async function loginSubmit() {
-  const validate = LogInSchema.safeParse(loginForm.value)
-  if (!validate.success) {
-    formError.value = validate.error.format()
-    return
-  }
-  const user = useUserStore()
-  const data = await user.login(validate.data)
-  if (data.status) {
-    console.log(user.accessToken)
+  try {
+    const validate = LogInSchema.safeParse(loginForm.value)
+    if (!validate.success) {
+      formError.value = validate.error.format()
+      return
+    }
+    const user = useUserStore()
+    await user.login(validate.data)
+
     router.push('/')
-  } else loginError.value = data.error
+  } catch (e) {
+    loginError.value = e as string
+  }
 }
 
 watch(loginForm.value, () => {
