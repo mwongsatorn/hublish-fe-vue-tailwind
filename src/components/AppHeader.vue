@@ -63,7 +63,11 @@ onUnmounted(() => {
           <RouterLink class="px-4 py-2 block text-center hover:bg-gray-200" :to="`/settings`">
             Settings
           </RouterLink>
-          <RouterLink class="px-4 py-2 block text-center hover:bg-gray-200" to="/">
+          <RouterLink
+            @click="user.logOut"
+            class="px-4 py-2 block text-center hover:bg-gray-200"
+            to="/"
+          >
             Log out
           </RouterLink>
         </div>

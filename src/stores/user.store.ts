@@ -65,6 +65,19 @@ export const useUserStore = defineStore('user', {
       this.user.accessToken = result.data.accessToken
       await this.getUserProfile()
       this.isLoggedIn = true
+    },
+
+    async logOut() {
+      const response = await axios.delete('/api/users/logout')
+      if (response.status !== 200) throw 'Something went wrong'
+      this.isLoggedIn = false
+      this.user = {
+        email: '',
+        username: '',
+        accessToken: '',
+        bio: '',
+        name: ''
+      }
     }
   }
 })
