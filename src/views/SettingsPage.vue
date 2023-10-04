@@ -1,56 +1,55 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { useUserStore } from '@/stores/user.store'
 import { z, type ZodFormattedError } from 'zod'
+import {
+  ChangeEmailSchema,
+  ChangePasswordSchema,
+  ChangeProfileSchema,
+  type ChangeEmail,
+  type ChangePassword,
+  type ChangeProfile
+} from '@/schemas/user'
 
-type Settings = z.infer<typeof SettingsSchema>
-const SettingsSchema = z
-  .object({
-    name: z.string().max(70, {
-      message: 'Your name can not be more than 70 characters.'
-    }),
-    bio: z.string().max(160, {
-      message: 'Your bio can not be more than 160 characters.'
-    }),
-    currentPassword: z.string(),
-    newPassword: z.string(),
-    confirmPassword: z.string(),
-    newEmail: z.string().email({
-      message: 'This is not a valid email.'
-    }),
-    password: z.string()
-  })
-  .refine((schema) => schema.newPassword === schema.confirmPassword, {
-    message: 'Password do not match.',
-    path: ['confirmPassword']
-  })
+const userStore = useUserStore()
 
-const formError = ref<ZodFormattedError<Settings> | null>(null)
-const settingsError = ref('')
-const settingsForm = ref({
-  name: '',
-  email: 'YourEmail@sfsdf.com',
-  newEmail: '',
-  bio: '',
+const emailFormError = ref<ZodFormattedError<ChangeEmail> | null>(null)
+const passwordFormError = ref<ZodFormattedError<ChangePassword> | null>(null)
+const profileFormError = ref<ZodFormattedError<ChangeProfile> | null>(null)
+const changeProfileError = ref('')
+const changeEmailError = ref('')
+const changePasswordError = ref('')
+
+const emailForm = ref({
   password: '',
+  newEmail: ''
+})
+const passwordForm = ref({
   currentPassword: '',
   newPassword: '',
   confirmPassword: ''
 })
+
+const profileForm = ref({
+  name: userStore.user.name,
+  bio: userStore.user.bio
+})
+
 const changeEmail = ref(false)
 const changePassword = ref(false)
 
 watch(changePassword, () => {
   if (changePassword.value === false) {
-    settingsForm.value.currentPassword = ''
-    settingsForm.value.newPassword = ''
-    settingsForm.value.confirmPassword = ''
+    passwordForm.value.currentPassword = ''
+    passwordForm.value.newPassword = ''
+    passwordForm.value.confirmPassword = ''
   }
 })
 
 watch(changeEmail, () => {
   if (changeEmail.value === false) {
-    settingsForm.value.newEmail = ''
-    settingsForm.value.password = ''
+    emailForm.value.newEmail = ''
+    emailForm.value.password = ''
   }
 })
 </script>
@@ -59,14 +58,21 @@ watch(changeEmail, () => {
   <main>
     <section class="max-w-7xl mx-auto px-4 py-12 min-h-[calc(100vh-56px)]">
       <h1 class="font-bold text-2xl text-center">Settings</h1>
-      <!-- <p class="mt-4 text-red-700 text-center" v-if="loginError">
-            {{ loginError }}
-          </p> -->
       <div>
+        <p class="mt-4 text-red-700 text-center" v-if="changeEmailError">
+          {{ changeEmailError }}
+        </p>
+        <p class="mt-4 text-red-700 text-center" v-if="changePasswordError">
+          {{ changePasswordError }}
+        </p>
+        <p class="mt-4 text-red-700 text-center" v-if="changeProfileError">
+          {{ changeProfileError }}
+        </p>
         <div v-if="!changeEmail" class="mt-4">
           <label for="email">Email</label>
           <div class="flex mt-2">
             <input
+              v-model="userStore.user.email"
               id="email"
               class="block w-full border-2 border-r-0 px-4 py-1.5"
               placeholder=""
@@ -79,22 +85,28 @@ watch(changeEmail, () => {
           <div class="mt-4">
             <label for="new-email">New Email</label>
             <input
-              v-model="settingsForm.newEmail"
+              v-model="emailForm.newEmail"
               id="new-email"
               class="block w-full mt-2 border-2 px-4 py-1.5"
               placeholder="Enter your new email"
               type="text"
             />
+            <p class="text-red-700" v-if="emailFormError?.password">
+              ** {{ emailFormError.password._errors[0] }} **
+            </p>
           </div>
           <div class="mt-4">
             <label for="password">Password</label>
             <input
-              v-model="settingsForm.password"
+              v-model="emailForm.password"
               id="password"
               class="block w-full mt-2 border-2 px-4 py-1.5"
               placeholder="Enter your password"
               type="text"
             />
+            <p class="text-red-700" v-if="emailFormError?.newEmail">
+              ** {{ emailFormError.newEmail._errors[0] }} **
+            </p>
           </div>
           <div class="flex items-center justify-end gap-x-4">
             <button type="submit" class="rounded-lg mt-8 block bg-green-500 px-4 py-2 text-white">
@@ -113,7 +125,7 @@ watch(changeEmail, () => {
           <label for="name">Password</label>
           <div class="flex mt-2">
             <input
-              v-model="settingsForm.password"
+              v-model="passwordForm.currentPassword"
               id="current-password"
               class="block w-full border-2 border-r-0 px-4 py-1.5"
               placeholder=""
@@ -121,8 +133,8 @@ watch(changeEmail, () => {
               disabled
             />
             <button @click="changePassword = true" class="px-4 py-1.5 border-2">Edit</button>
-            <p class="text-red-700" v-if="formError?.currentPassword">
-              ** {{ formError.currentPassword._errors[0] }} **
+            <p class="text-red-700" v-if="passwordFormError?.currentPassword">
+              ** {{ passwordFormError.currentPassword._errors[0] }} **
             </p>
           </div>
         </div>
@@ -130,7 +142,7 @@ watch(changeEmail, () => {
           <div class="mt-4">
             <label for="current-password">Current password</label>
             <input
-              v-model="settingsForm.currentPassword"
+              v-model="passwordForm.currentPassword"
               id="current=password"
               class="block w-full mt-2 border-2 px-4 py-1.5"
               type="password"
@@ -140,7 +152,7 @@ watch(changeEmail, () => {
           <div class="mt-4">
             <label for="new-password">New password</label>
             <input
-              v-model="settingsForm.newPassword"
+              v-model="passwordForm.newPassword"
               class="block w-full mt-2 border-2 px-4 py-1.5"
               type="password"
               placeholder="Enter your new password"
@@ -149,7 +161,7 @@ watch(changeEmail, () => {
           <div class="mt-4">
             <label for="confirm-password">Confirm password</label>
             <input
-              v-model="settingsForm.confirmPassword"
+              v-model="passwordForm.confirmPassword"
               class="block w-full mt-2 border-2 px-4 py-1.5"
               type="password"
               placeholder="Confirm your new password"
@@ -172,23 +184,27 @@ watch(changeEmail, () => {
           <div class="mt-4">
             <label for="name">Name</label>
             <input
-              v-model="settingsForm.name"
+              v-model="profileForm.name"
               id="name"
               class="block w-full mt-2 border-2 px-4 py-1.5"
               placeholder="Name"
               type="text"
             />
-            <p class="text-red-700" v-if="formError?.name">** {{ formError.name._errors[0] }} **</p>
+            <p class="text-red-700" v-if="profileFormError?.name">
+              ** {{ profileFormError.name._errors[0] }} **
+            </p>
           </div>
           <div class="mt-4">
             <label for="bio">Bio</label>
             <textarea
-              v-model="settingsForm.bio"
+              v-model="profileForm.bio"
               id="bio"
               class="block w-full h-24 mt-2 border-2 px-4 py-2 resize-none"
-              placeholder="Yell me more about yourself"
+              placeholder="Tell me more about yourself"
             />
-            <p class="text-red-700" v-if="formError?.bio">** {{ formError.bio._errors[0] }} **</p>
+            <p class="text-red-700" v-if="profileFormError?.bio">
+              ** {{ profileFormError.bio._errors[0] }} **
+            </p>
           </div>
           <button class="ml-auto rounded-lg mt-8 block bg-green-500 px-4 py-2 text-white">
             Submit
