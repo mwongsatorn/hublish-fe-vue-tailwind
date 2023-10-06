@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useUserStore } from '@/stores/user.store'
-import { z, type ZodFormattedError } from 'zod'
+import { type ZodFormattedError } from 'zod'
 import {
   ChangeEmailSchema,
   ChangePasswordSchema,
@@ -10,6 +10,7 @@ import {
   type ChangePassword,
   type ChangeProfile
 } from '@/schemas/user'
+import axios from 'axios'
 
 const userStore = useUserStore()
 
@@ -52,6 +53,94 @@ watch(changeEmail, () => {
     emailForm.value.password = ''
   }
 })
+
+async function emailSubmit() {
+  const validate = ChangeEmailSchema.safeParse(emailForm.value)
+  if (!validate.success) {
+    emailFormError.value = validate.error.format()
+    return
+  }
+  const response = await axios.put('/api/users/settings/email', validate.data, {
+    headers: {
+      Authorization: `Bearer ${userStore.user.accessToken}`
+    }
+  })
+  if (response.status === 400) {
+    changeEmailError.value = 'Something went wrong.'
+    return
+  }
+  if (response.status === 401) {
+    if (response.data?.error !== 'Token expired') {
+      changeEmailError.value = 'Your password is incorrect.'
+      return
+    }
+    await userStore.refreshAccessToken()
+    await emailSubmit()
+    return
+  }
+  if (response.status === 409) {
+    changeEmailError.value = 'This email is already used by other user.'
+    return
+  }
+  alert('Successfully changed your email')
+  userStore.user.email = validate.data.newEmail
+}
+
+async function passwordSubmit() {
+  const validate = ChangePasswordSchema.safeParse(passwordForm.value)
+  if (!validate.success) {
+    passwordFormError.value = validate.error.format()
+    return
+  }
+  const response = await axios.put('/api/users/settings/password', validate.data, {
+    headers: {
+      Authorization: `Bearer ${userStore.user.accessToken}`
+    }
+  })
+  if (response.status === 400) {
+    changePasswordError.value = 'Something went wrong.'
+    return
+  }
+  if (response.status === 401) {
+    if (response.data?.error !== 'Token expired') {
+      changePasswordError.value = 'Your password is incorrect.'
+      return
+    }
+    await userStore.refreshAccessToken()
+    await passwordSubmit()
+    return
+  }
+  alert('Successfully changed your password')
+}
+
+async function profileSubmit() {
+  const validate = ChangeProfileSchema.safeParse(profileForm.value)
+  if (!validate.success) {
+    profileFormError.value = validate.error.format()
+    return
+  }
+  const response = await axios.put('/api/users/settings/profile', validate.data, {
+    headers: {
+      Authorization: `Bearer ${userStore.user.accessToken}`
+    }
+  })
+  if (response.status === 400) {
+    changeProfileError.value = 'Something went wrong.'
+    return
+  }
+  if (response.status === 401) {
+    if (response.data?.error !== 'Token expired') {
+      changeProfileError.value = 'Your password is incorrect.'
+      return
+    }
+    await userStore.refreshAccessToken()
+    await emailSubmit()
+    return
+  }
+  alert('Successfully changed your profile')
+  userStore.user.name = validate.data.name
+  userStore.user.bio = validate.data.bio
+}
 </script>
 
 <template>
@@ -81,7 +170,7 @@ watch(changeEmail, () => {
             <button @click="changeEmail = true" class="px-4 py-1.5 border-2">Edit</button>
           </div>
         </div>
-        <form v-else>
+        <form @submit.prevent="emailSubmit" v-else>
           <div class="mt-4">
             <label for="new-email">New Email</label>
             <input
@@ -91,8 +180,8 @@ watch(changeEmail, () => {
               placeholder="Enter your new email"
               type="text"
             />
-            <p class="text-red-700" v-if="emailFormError?.password">
-              ** {{ emailFormError.password._errors[0] }} **
+            <p class="text-red-700" v-if="emailFormError?.newEmail">
+              ** {{ emailFormError.newEmail._errors[0] }} **
             </p>
           </div>
           <div class="mt-4">
@@ -102,10 +191,10 @@ watch(changeEmail, () => {
               id="password"
               class="block w-full mt-2 border-2 px-4 py-1.5"
               placeholder="Enter your password"
-              type="text"
+              type="password"
             />
-            <p class="text-red-700" v-if="emailFormError?.newEmail">
-              ** {{ emailFormError.newEmail._errors[0] }} **
+            <p class="text-red-700" v-if="emailFormError?.password">
+              ** {{ emailFormError.password._errors[0] }} **
             </p>
           </div>
           <div class="flex items-center justify-end gap-x-4">
@@ -133,12 +222,9 @@ watch(changeEmail, () => {
               disabled
             />
             <button @click="changePassword = true" class="px-4 py-1.5 border-2">Edit</button>
-            <p class="text-red-700" v-if="passwordFormError?.currentPassword">
-              ** {{ passwordFormError.currentPassword._errors[0] }} **
-            </p>
           </div>
         </div>
-        <form v-else>
+        <form @submit.prevent="passwordSubmit" v-else>
           <div class="mt-4">
             <label for="current-password">Current password</label>
             <input
@@ -148,6 +234,9 @@ watch(changeEmail, () => {
               type="password"
               placeholder="Enter your current password"
             />
+            <p class="text-red-700" v-if="passwordFormError?.currentPassword">
+              ** {{ passwordFormError.currentPassword._errors[0] }} **
+            </p>
           </div>
           <div class="mt-4">
             <label for="new-password">New password</label>
@@ -157,6 +246,9 @@ watch(changeEmail, () => {
               type="password"
               placeholder="Enter your new password"
             />
+            <p class="text-red-700" v-if="passwordFormError?.newPassword">
+              ** {{ passwordFormError.newPassword._errors[0] }} **
+            </p>
           </div>
           <div class="mt-4">
             <label for="confirm-password">Confirm password</label>
@@ -166,6 +258,9 @@ watch(changeEmail, () => {
               type="password"
               placeholder="Confirm your new password"
             />
+            <p class="text-red-700" v-if="passwordFormError?.confirmPassword">
+              ** {{ passwordFormError.confirmPassword._errors[0] }} **
+            </p>
           </div>
           <div class="flex items-center justify-end gap-x-4">
             <button type="submit" class="rounded-lg mt-8 block bg-green-500 px-4 py-2 text-white">
@@ -180,7 +275,7 @@ watch(changeEmail, () => {
             </button>
           </div>
         </form>
-        <form id="main-form">
+        <form @submit.prevent="profileSubmit" id="main-form">
           <div class="mt-4">
             <label for="name">Name</label>
             <input
