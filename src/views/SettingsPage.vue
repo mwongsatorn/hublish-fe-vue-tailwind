@@ -44,6 +44,8 @@ watch(changePassword, () => {
     passwordForm.value.currentPassword = ''
     passwordForm.value.newPassword = ''
     passwordForm.value.confirmPassword = ''
+    passwordFormError.value = null
+    changePasswordError.value = ''
   }
 })
 
@@ -51,6 +53,29 @@ watch(changeEmail, () => {
   if (changeEmail.value === false) {
     emailForm.value.newEmail = ''
     emailForm.value.password = ''
+    emailFormError.value = null
+    changeEmailError.value = ''
+  }
+})
+
+watch(profileForm.value, () => {
+  if (!profileFormError.value || !changeProfileError.value) {
+    profileFormError.value = null
+    changeProfileError.value = ''
+  }
+})
+
+watch(passwordForm.value, () => {
+  if (!passwordFormError.value || !changePasswordError.value) {
+    passwordFormError.value = null
+    changePasswordError.value = ''
+  }
+})
+
+watch(emailForm.value, () => {
+  if (!emailFormError.value || !changeEmailError.value) {
+    emailFormError.value = null
+    changeEmailError.value = ''
   }
 })
 
@@ -83,6 +108,7 @@ async function emailSubmit() {
     return
   }
   alert('Successfully changed your email')
+  changeEmail.value = false
   userStore.user.email = validate.data.newEmail
 }
 
@@ -111,6 +137,7 @@ async function passwordSubmit() {
     return
   }
   alert('Successfully changed your password')
+  changePassword.value = false
 }
 
 async function profileSubmit() {
