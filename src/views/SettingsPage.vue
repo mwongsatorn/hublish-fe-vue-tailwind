@@ -31,11 +31,6 @@ const passwordForm = ref({
   confirmPassword: ''
 })
 
-const profileForm = ref({
-  name: userStore.user.name,
-  bio: userStore.user.bio
-})
-
 const changeEmail = ref(false)
 const changePassword = ref(false)
 
@@ -58,7 +53,7 @@ watch(changeEmail, () => {
   }
 })
 
-watch(profileForm.value, () => {
+watch(userStore.user, () => {
   if (!profileFormError.value || !changeProfileError.value) {
     profileFormError.value = null
     changeProfileError.value = ''
@@ -141,7 +136,10 @@ async function passwordSubmit() {
 }
 
 async function profileSubmit() {
-  const validate = ChangeProfileSchema.safeParse(profileForm.value)
+  const validate = ChangeProfileSchema.safeParse({
+    name: userStore.user.name,
+    bio: userStore.user.bio
+  })
   if (!validate.success) {
     profileFormError.value = validate.error.format()
     return
@@ -306,7 +304,7 @@ async function profileSubmit() {
           <div class="mt-4">
             <label for="name">Name</label>
             <input
-              v-model="profileForm.name"
+              v-model="userStore.user.name"
               id="name"
               class="block w-full mt-2 border-2 px-4 py-1.5"
               placeholder="Name"
@@ -319,7 +317,7 @@ async function profileSubmit() {
           <div class="mt-4">
             <label for="bio">Bio</label>
             <textarea
-              v-model="profileForm.bio"
+              v-model="userStore.user.bio"
               id="bio"
               class="block w-full h-24 mt-2 border-2 px-4 py-2 resize-none"
               placeholder="Tell me more about yourself"
