@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '@/stores/user.store'
 import HomePage from '@/views/HomePage.vue'
 
 const router = createRouter({
@@ -27,9 +28,22 @@ const router = createRouter({
     {
       path: '/settings',
       name: 'Settings',
-      component: () => import('@/views/SettingsPage.vue')
+      component: () => import('@/views/SettingsPage.vue'),
+      meta: {
+        requireAuth: true
+      }
     }
   ]
+})
+
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUserStore()
+  if (!userStore.isLoggedIn) {
+    await userStore.refreshAccessToken()
+  }
+  if (to.meta?.requireAuth && !userStore.isLoggedIn) {
+    next({ name: 'Login' })
+  } else next()
 })
 
 export default router
