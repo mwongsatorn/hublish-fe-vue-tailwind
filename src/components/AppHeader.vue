@@ -6,10 +6,6 @@ import IconChevronDown from '@/components/icons/ChevronDown.vue'
 
 const user = useUserStore()
 
-if (!user.isLoggedIn) {
-  await user.refreshAccessToken()
-}
-
 const isMenuOpened = ref(false)
 const menu = ref<HTMLElement | null>(null)
 
