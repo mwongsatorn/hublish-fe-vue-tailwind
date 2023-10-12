@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { useUserStore } from '@/stores/user.store'
 import { CreateArticleSchema, type CreateArticle } from '@/schemas/article'
 import { type ZodFormattedError } from 'zod'
+import axios from 'axios'
+
+const userStore = useUserStore()
 
 const formError = ref<ZodFormattedError<CreateArticle> | null>(null)
+const createArticleError = ref('')
 
 const createArticleForm = ref({
   title: '',
@@ -15,18 +20,36 @@ watch(createArticleForm.value, () => {
   if (formError.value) formError.value = null
 })
 
-function createArticleSubmit() {
+function generateSlug(title: string) {
+  return title
+    .replace(/[^\w\s]/g, '')
+    .replace(/\s+/g, '-')
+    .toLowerCase()
+}
+
+async function createArticleSubmit() {
   const tags = createArticleForm.value.tags.split(/[,\s]+/).filter(Boolean)
+  const slug = generateSlug(createArticleForm.value.title)
   const validateForm = CreateArticleSchema.safeParse({
     title: createArticleForm.value.title,
     content: createArticleForm.value.content,
-    tags: tags
+    tags: tags,
+    slug: slug
   })
   if (!validateForm.success) {
     formError.value = validateForm.error.format()
     return
   }
-  console.log(validateForm.data)
+  const response = await axios.post('/api/articles/', validateForm.data, {
+    headers: {
+      Authorization: `Bearer ${userStore.user.accessToken}`
+    }
+  })
+  if (response.status !== 200) {
+    createArticleError.value = 'Something went wrong.'
+    return
+  }
+  alert('Created article successfully')
 }
 </script>
 
@@ -34,6 +57,9 @@ function createArticleSubmit() {
   <main>
     <section class="max-w-7xl mx-auto px-4 py-12 min-h-[calc(100vh-56px)]">
       <h1 class="font-bold text-2xl text-center">Create Article</h1>
+      <p class="mt-4 text-red-700 text-center" v-if="createArticleError">
+        {{ createArticleError }}
+      </p>
       <form @submit.prevent="createArticleSubmit">
         <div class="mt-4">
           <label for="">Article title</label>
