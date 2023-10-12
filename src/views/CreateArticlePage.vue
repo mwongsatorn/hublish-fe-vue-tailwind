@@ -20,21 +20,12 @@ watch(createArticleForm.value, () => {
   if (formError.value) formError.value = null
 })
 
-function generateSlug(title: string) {
-  return title
-    .replace(/[^\w\s]/g, '')
-    .replace(/\s+/g, '-')
-    .toLowerCase()
-}
-
 async function createArticleSubmit() {
   const tags = createArticleForm.value.tags.split(/[,\s]+/).filter(Boolean)
-  const slug = generateSlug(createArticleForm.value.title)
   const validateForm = CreateArticleSchema.safeParse({
     title: createArticleForm.value.title,
     content: createArticleForm.value.content,
-    tags: tags,
-    slug: slug
+    tags: tags
   })
   if (!validateForm.success) {
     formError.value = validateForm.error.format()
