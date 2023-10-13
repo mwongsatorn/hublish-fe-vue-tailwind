@@ -23,3 +23,15 @@ export const CreateArticleSchema = z.object({
       }
     )
 })
+
+export type Article = z.infer<typeof ArticleSchema>
+export const ArticleSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  content: z.string(),
+  tags: z.string().array(),
+  favouritedCount: z.number(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  author_id: z.string()
+})
