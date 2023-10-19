@@ -30,7 +30,18 @@ export const LogInSchema = z.object({
 
 export const LogInResponseSchema = z.object({
   user: z.object({
+    id: z.string(),
     accessToken: z.string(),
+    email: z.string(),
+    username: z.string(),
+    name: z.string(),
+    bio: z.string()
+  })
+})
+
+export const CurrentUserSchema = z.object({
+  user: z.object({
+    id: z.string(),
     email: z.string(),
     username: z.string(),
     name: z.string(),
@@ -40,6 +51,7 @@ export const LogInResponseSchema = z.object({
 
 export const ProfileSchema = z.object({
   profile: z.object({
+    id: z.string(),
     username: z.string(),
     name: z.string(),
     email: z.string(),

@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { z } from 'zod'
-import { LogInResponseSchema, ProfileSchema } from '@/schemas/user'
+import { CurrentUserSchema, LogInResponseSchema, ProfileSchema } from '@/schemas/user'
 
 interface UserState {
   user: {
+    id: string
     email: string
     username: string
     name: string
@@ -18,6 +19,7 @@ export const useUserStore = defineStore('user', {
   state: (): UserState => ({
     isLoggedIn: false,
     user: {
+      id: '',
       email: '',
       username: '',
       name: '',
@@ -27,7 +29,7 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async login(details: { username: string; password: string }) {
-      const response = await axios.post('/api/users/login', details)
+      const response = await axios.post('/api/auth/login', details)
 
       if (response.status === 401) throw 'Username or password is incorrect'
 
@@ -40,25 +42,26 @@ export const useUserStore = defineStore('user', {
     },
 
     async getUserProfile() {
-      const response = await axios.get('/api/users/profile', {
+      const response = await axios.get('/api/users/current', {
         headers: {
           Authorization: `Bearer ${this.user.accessToken}`
         }
       })
-      if (response.status === 403) {
+      if (response.status === 401) {
         await this.refreshAccessToken()
       }
-      const validateRes = ProfileSchema.safeParse(response.data)
+      const validateRes = CurrentUserSchema.safeParse(response.data)
       if (!validateRes.success) throw 'Something went wrong'
       const { data } = validateRes
-      this.user.email = data.profile.email
-      this.user.bio = data.profile.bio
-      this.user.username = data.profile.username
-      this.user.name = data.profile.name
+      this.user.id = data.user.id
+      this.user.email = data.user.email
+      this.user.bio = data.user.bio
+      this.user.username = data.user.username
+      this.user.name = data.user.name
     },
 
     async refreshAccessToken() {
-      const response = await axios.get('/api/users/refresh')
+      const response = await axios.get('/api/auth/refresh')
       if (response.status !== 200) return
       const result = z.object({ accessToken: z.string() }).safeParse(response.data)
       if (!result.success) throw 'Something went wrong'
@@ -68,10 +71,11 @@ export const useUserStore = defineStore('user', {
     },
 
     async logOut() {
-      const response = await axios.delete('/api/users/logout')
+      const response = await axios.delete('/api/auth/logout')
       if (response.status !== 200) throw 'Something went wrong'
       this.isLoggedIn = false
       this.user = {
+        id: '',
         email: '',
         username: '',
         accessToken: '',
