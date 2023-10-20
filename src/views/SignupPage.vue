@@ -24,7 +24,7 @@ async function signupSubmit() {
     formError.value = validateForm.error.format()
     return
   }
-  const response = await axios.post('http://localhost:8080/api/users/signup', validateForm.data)
+  const response = await axios.post('http://localhost:8080/api/auth/signup', validateForm.data)
 
   if (response.status === 200) {
     signupError.value = response.data.error
