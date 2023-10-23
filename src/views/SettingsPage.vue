@@ -80,11 +80,7 @@ async function emailSubmit() {
     emailFormError.value = validate.error.format()
     return
   }
-  const response = await axios.put('/api/users/settings/email', validate.data, {
-    headers: {
-      Authorization: `Bearer ${userStore.user.accessToken}`
-    }
-  })
+  const response = await axios.put('/api/users/settings/email', validate.data)
   if (response.status === 400) {
     changeEmailError.value = 'Something went wrong.'
     return
@@ -113,11 +109,7 @@ async function passwordSubmit() {
     passwordFormError.value = validate.error.format()
     return
   }
-  const response = await axios.put('/api/users/settings/password', validate.data, {
-    headers: {
-      Authorization: `Bearer ${userStore.user.accessToken}`
-    }
-  })
+  const response = await axios.put('/api/users/settings/password', validate.data)
   if (response.status === 400) {
     changePasswordError.value = 'Something went wrong.'
     return
@@ -144,11 +136,7 @@ async function profileSubmit() {
     profileFormError.value = validate.error.format()
     return
   }
-  const response = await axios.put('/api/users/settings/profile', validate.data, {
-    headers: {
-      Authorization: `Bearer ${userStore.user.accessToken}`
-    }
-  })
+  const response = await axios.put('/api/users/settings/profile', validate.data)
   if (response.status === 400) {
     changeProfileError.value = 'Something went wrong.'
     return

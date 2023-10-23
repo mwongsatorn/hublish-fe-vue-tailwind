@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { z } from 'zod'
-import { CurrentUserSchema, LogInResponseSchema, ProfileSchema } from '@/schemas/user'
+import { CurrentUserSchema, LogInResponseSchema } from '@/schemas/user'
 
 interface UserState {
   user: {
@@ -42,11 +42,7 @@ export const useUserStore = defineStore('user', {
     },
 
     async getUserProfile() {
-      const response = await axios.get('/api/users/current', {
-        headers: {
-          Authorization: `Bearer ${this.user.accessToken}`
-        }
-      })
+      const response = await axios.get('/api/users/current')
       if (response.status === 401) {
         await this.refreshAccessToken()
       }

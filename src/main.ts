@@ -10,10 +10,19 @@ axios.defaults.withCredentials = true
 
 import App from './App.vue'
 import router from './router'
+import { useUserStore } from './stores/user.store'
 
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+
+const userStore = useUserStore()
+axios.interceptors.request.use((config) => {
+  if (userStore.user.accessToken) {
+    config.headers.Authorization = `Bearer ${userStore.user.accessToken}`
+  }
+  return config
+})
 
 app.mount('#app')
