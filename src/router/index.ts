@@ -25,23 +25,31 @@ const router = createRouter({
       name: 'Profile',
       component: () => import('@/views/ProfilePage.vue'),
       props: true,
-      beforeEnter: (to, from, next) => {
-        const userStore = useUserStore()
-        if (userStore.user.username === to.params.username && to.name !== 'UserFeed')
-          return next({
-            name: 'UserFeed',
-            params: {
-              username: to.params.username
-            }
-          })
-
-        return next()
+      redirect: {
+        name: 'UserFeed'
       },
       children: [
         {
           path: 'feed',
           component: () => import('@/views/UserFeedPage.vue'),
-          name: 'UserFeed'
+          name: 'UserFeed',
+          beforeEnter: (to, from, next) => {
+            const userStore = useUserStore()
+            if (!userStore.isLoggedIn || userStore.user.username !== to.params.username)
+              return next({
+                name: 'UserArticles',
+                params: {
+                  username: to.params.username
+                }
+              })
+
+            return next()
+          }
+        },
+        {
+          path: 'articles',
+          component: () => import('@/views/UserArticlesPage.vue'),
+          name: 'UserArticles'
         }
       ]
     },
