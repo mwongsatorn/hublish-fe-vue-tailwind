@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useUserStore } from '@/stores/user.store'
+import { useRouter } from 'vue-router'
 import { CreateArticleSchema, type CreateArticle } from '@/schemas/article'
 import { type ZodFormattedError } from 'zod'
 import axios from 'axios'
 
-const userStore = useUserStore()
+const router = useRouter()
 
 const formError = ref<ZodFormattedError<CreateArticle> | null>(null)
 const createArticleError = ref('')
@@ -31,16 +31,13 @@ async function createArticleSubmit() {
     formError.value = validateForm.error.format()
     return
   }
-  const response = await axios.post('/api/articles/', validateForm.data, {
-    headers: {
-      Authorization: `Bearer ${userStore.user.accessToken}`
-    }
-  })
+  const response = await axios.post('/api/articles/', validateForm.data)
   if (response.status !== 200) {
     createArticleError.value = 'Something went wrong.'
     return
   }
   alert('Created article successfully')
+  router.push({ name: 'ArticleDetails', params: { slug: response.data.slug } })
 }
 </script>
 
