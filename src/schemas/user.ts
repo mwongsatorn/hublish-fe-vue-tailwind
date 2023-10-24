@@ -49,13 +49,17 @@ export const CurrentUserSchema = z.object({
   })
 })
 
+export type Profile = z.infer<typeof ProfileSchema>
 export const ProfileSchema = z.object({
   profile: z.object({
     id: z.string(),
     username: z.string(),
     name: z.string(),
     email: z.string(),
-    bio: z.string()
+    bio: z.string(),
+    image: z.string(),
+    followerCount: z.number(),
+    followingCount: z.number()
   })
 })
 
