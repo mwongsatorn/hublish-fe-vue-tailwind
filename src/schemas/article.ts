@@ -24,6 +24,9 @@ export const CreateArticleSchema = z.object({
     )
 })
 
+export type EditArticle = z.infer<typeof EditArticleSchema>
+export const EditArticleSchema = CreateArticleSchema.partial()
+
 export type Article = z.infer<typeof ArticleSchema>
 export const ArticleSchema = z.object({
   id: z.string(),
@@ -33,5 +36,11 @@ export const ArticleSchema = z.object({
   favouritedCount: z.number(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  author_id: z.string()
+  author_id: z.string(),
+  author: z.object({
+    username: z.string(),
+    name: z.string(),
+    bio: z.string(),
+    image: z.string()
+  })
 })

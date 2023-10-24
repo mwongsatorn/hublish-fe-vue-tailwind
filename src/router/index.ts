@@ -42,6 +42,15 @@ const router = createRouter({
       }
     },
     {
+      path: '/articles/:slug/edit',
+      name: 'EditArticle',
+      component: () => import('@/views/EditArticlePage.vue'),
+      meta: {
+        requireAuth: true
+      },
+      props: true
+    },
+    {
       path: '/articles/:slug',
       name: 'ArticleDetails',
       component: () => import('@/views/ArticleDetailsPage.vue'),
