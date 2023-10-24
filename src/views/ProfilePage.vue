@@ -58,10 +58,10 @@ if (response.status === 200) {
             Articles
           </RouterLink>
           <RouterLink
-            :to="{ name: 'UserFeed', params: { username: props.username } }"
+            :to="{ name: 'UserFavouriteArticles', params: { username: props.username } }"
             class="py-4 w-full text-center hover:bg-gray-200"
           >
-            Favorited articles
+            Favourite
           </RouterLink>
         </div>
       </section>

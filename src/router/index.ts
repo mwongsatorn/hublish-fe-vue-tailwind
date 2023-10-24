@@ -50,6 +50,11 @@ const router = createRouter({
           path: 'articles',
           component: () => import('@/views/UserArticlesPage.vue'),
           name: 'UserArticles'
+        },
+        {
+          path: 'favourite',
+          component: () => import('@/views/UserFavouriteArticlesPage.vue'),
+          name: 'UserFavouriteArticles'
         }
       ]
     },
