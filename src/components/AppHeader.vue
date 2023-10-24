@@ -52,7 +52,7 @@ onUnmounted(() => {
         >
           <RouterLink
             class="px-4 py-2 block text-center hover:bg-gray-200"
-            :to="`/profile/${user.user.username}`"
+            :to="`/${user.user.username}`"
           >
             Profile
           </RouterLink>
