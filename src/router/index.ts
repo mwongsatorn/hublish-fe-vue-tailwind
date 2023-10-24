@@ -24,7 +24,26 @@ const router = createRouter({
       path: '/:username',
       name: 'Profile',
       component: () => import('@/views/ProfilePage.vue'),
-      props: true
+      props: true,
+      beforeEnter: (to, from, next) => {
+        const userStore = useUserStore()
+        if (userStore.user.username === to.params.username && to.name !== 'UserFeed')
+          return next({
+            name: 'UserFeed',
+            params: {
+              username: to.params.username
+            }
+          })
+
+        return next()
+      },
+      children: [
+        {
+          path: 'feed',
+          component: () => import('@/views/UserFeedPage.vue'),
+          name: 'UserFeed'
+        }
+      ]
     },
     {
       path: '/settings',

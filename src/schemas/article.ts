@@ -31,11 +31,12 @@ export type Article = z.infer<typeof ArticleSchema>
 export const ArticleSchema = z.object({
   id: z.string(),
   title: z.string(),
+  slug: z.string(),
   content: z.string(),
   tags: z.string().array(),
-  favouritedCount: z.number(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  favouriteCount: z.number(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
   author_id: z.string(),
   author: z.object({
     username: z.string(),
