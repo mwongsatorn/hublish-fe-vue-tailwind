@@ -19,8 +19,8 @@ app.use(router)
 
 const userStore = useUserStore()
 axios.interceptors.request.use((config) => {
-  if (userStore.user.accessToken) {
-    config.headers.Authorization = `Bearer ${userStore.user.accessToken}`
+  if (userStore.accessToken) {
+    config.headers.Authorization = `Bearer ${userStore.accessToken}`
   }
   return config
 })

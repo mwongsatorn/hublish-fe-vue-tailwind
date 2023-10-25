@@ -28,39 +28,17 @@ export const LogInSchema = z.object({
   password: z.string().nonempty({ message: 'Password is required' })
 })
 
-export const LogInResponseSchema = z.object({
-  user: z.object({
-    id: z.string(),
-    accessToken: z.string(),
-    email: z.string(),
-    username: z.string(),
-    name: z.string(),
-    bio: z.string()
-  })
-})
-
-export const CurrentUserSchema = z.object({
-  user: z.object({
-    id: z.string(),
-    email: z.string(),
-    username: z.string(),
-    name: z.string(),
-    bio: z.string()
-  })
-})
-
-export type Profile = z.infer<typeof ProfileSchema>
-export const ProfileSchema = z.object({
-  profile: z.object({
-    id: z.string(),
-    username: z.string(),
-    name: z.string(),
-    email: z.string(),
-    bio: z.string(),
-    image: z.string(),
-    followerCount: z.number(),
-    followingCount: z.number()
-  })
+export type User = z.infer<typeof UserSchema>
+export const UserSchema = z.object({
+  id: z.string(),
+  email: z.string(),
+  username: z.string(),
+  name: z.string(),
+  bio: z.string(),
+  image: z.string(),
+  accessToken: z.string().optional(),
+  followerCount: z.number(),
+  followingCount: z.number()
 })
 
 export type ChangeEmail = z.infer<typeof ChangeEmailSchema>

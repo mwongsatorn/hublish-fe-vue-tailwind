@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import axios from 'axios'
-import { ProfileSchema, type Profile } from '@/schemas/user'
+import { UserSchema, type User } from '@/schemas/user'
 import { useUserStore } from '@/stores/user.store'
 
-const user = ref<Profile | null>(null)
+const user = ref<User | null>(null)
 const userStore = useUserStore()
 
 const props = defineProps<{ username: string }>()
 const response = await axios.get(`/api/users/${props.username}/profile`)
 if (response.status === 200) {
-  const validateRes = ProfileSchema.safeParse(response.data)
+  const validateRes = UserSchema.safeParse(response.data)
   if (!validateRes.success) throw 'Error'
   user.value = validateRes.data
 }
@@ -27,21 +27,21 @@ if (response.status === 200) {
             class="top-0 -translate-y-[calc(50%+16px)] sm:h-[200px] sm:w-[200px] h-[150px] w-[150px] shrink-0 rounded-full border-4 border-white bg-gray-200"
           />
 
-          <div v-if="userStore.user.id === user?.profile.id" class="ml-auto">
+          <div v-if="userStore.user.id === user?.id" class="ml-auto">
             <button class="bg-white border-2 py-2 px-4 rounded-lg">Edit profile</button>
           </div>
         </div>
         <div class="space-y-2 px-4 py-4">
           <div>
-            <p class="text-2xl font-bold sm:text-start">{{ user?.profile.name }}</p>
-            <p class="font-bold sm:text-start">@{{ user?.profile.username }}</p>
+            <p class="text-2xl font-bold sm:text-start">{{ user?.name }}</p>
+            <p class="font-bold sm:text-start">@{{ user?.username }}</p>
           </div>
           <p class="sm:text-start">
-            {{ user?.profile.bio }}
+            {{ user?.bio }}
           </p>
           <p>
-            follower: {{ user?.profile.followerCount }} following:
-            {{ user?.profile.followingCount }}
+            follower: {{ user?.followerCount }} following:
+            {{ user?.followingCount }}
           </p>
         </div>
         <div class="flex items-center bg-gray-100">
@@ -66,7 +66,7 @@ if (response.status === 200) {
         </div>
       </section>
       <section class="py-12">
-        <RouterView :user_id="user!.profile.id"></RouterView>
+        <RouterView :user_id="user!.id"></RouterView>
       </section>
     </div>
   </main>

@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router'
 import { useUserStore } from '@/stores/user.store'
 import IconChevronDown from '@/components/icons/ChevronDown.vue'
 
-const user = useUserStore()
+const userStore = useUserStore()
 
 const isMenuOpened = ref(false)
 const menu = ref<HTMLElement | null>(null)
@@ -28,7 +28,7 @@ onUnmounted(() => {
       <RouterLink to="/">
         <span class="font-bold text-xl uppercase">Hublish</span>
       </RouterLink>
-      <div v-if="!user.isLoggedIn" class="ml-auto flex items-center gap-x-4">
+      <div v-if="!userStore.isLoggedIn" class="ml-auto flex items-center gap-x-4">
         <RouterLink class="hover:text-green-500" to="/login"> Log in </RouterLink>
         <RouterLink class="hover:text-green-500" to="/signup"> Sign up </RouterLink>
       </div>
@@ -40,7 +40,7 @@ onUnmounted(() => {
       >
         <div class="h-10 w-10 rounded-full bg-gray-300" />
         <div class="sm:block hidden">
-          <span>{{ user.user?.username }}</span>
+          <span>{{ userStore.user?.username }}</span>
         </div>
         <div>
           <IconChevronDown class="h-6 w-6"></IconChevronDown>
@@ -52,7 +52,7 @@ onUnmounted(() => {
         >
           <RouterLink
             class="px-4 py-2 block text-center hover:bg-gray-200"
-            :to="`/${user.user.username}`"
+            :to="`/${userStore.user?.username}`"
           >
             Profile
           </RouterLink>
@@ -60,7 +60,7 @@ onUnmounted(() => {
             Settings
           </RouterLink>
           <RouterLink
-            @click="user.logOut"
+            @click="userStore.logOut"
             class="px-4 py-2 block text-center hover:bg-gray-200"
             to="/"
           >
