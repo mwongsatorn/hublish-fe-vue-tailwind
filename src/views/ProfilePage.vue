@@ -23,11 +23,12 @@ if (response.status === 200) {
         <div class="h-[250px] bg-green-400"></div>
 
         <div class="flex items-start relative py-4 px-4 sm:h-[100px] h-[75px]">
-          <div
+          <img
+            :src="user?.image"
             class="top-0 -translate-y-[calc(50%+16px)] sm:h-[200px] sm:w-[200px] h-[150px] w-[150px] shrink-0 rounded-full border-4 border-white bg-gray-200"
           />
 
-          <div v-if="userStore.user.id === user?.id" class="ml-auto">
+          <div v-if="userStore.user?.id === user?.id" class="ml-auto">
             <button class="bg-white border-2 py-2 px-4 rounded-lg">Edit profile</button>
           </div>
         </div>
@@ -66,7 +67,7 @@ if (response.status === 200) {
         </div>
       </section>
       <section class="py-12">
-        <RouterView :user_id="user!.id"></RouterView>
+        <RouterView :user_id="user?.id"></RouterView>
       </section>
     </div>
   </main>

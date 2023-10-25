@@ -15,7 +15,7 @@ const props = defineProps<{
     <div class="">
       <div class="flex items-center justify-between flex-wrap gap-x-4">
         <div class="flex items-center gap-x-4">
-          <div class="h-10 w-10 rounded-full bg-gray-200"></div>
+          <img :src="props.article.author.image" class="h-10 w-10 rounded-full bg-gray-200" />
           <span>
             {{ props.article.author.name }}
           </span>

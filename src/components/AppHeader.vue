@@ -38,7 +38,7 @@ onUnmounted(() => {
         v-else
         class="ml-auto flex items-center gap-x-4 relative group cursor-pointer"
       >
-        <div class="h-10 w-10 rounded-full bg-gray-300" />
+        <img :src="userStore.user?.image" class="h-10 w-10 rounded-full bg-gray-300" />
         <div class="sm:block hidden">
           <span>{{ userStore.user?.username }}</span>
         </div>
