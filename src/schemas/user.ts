@@ -69,5 +69,6 @@ export const ChangeProfileSchema = z.object({
     .nonempty({ message: 'This field can not be empty' }),
   bio: z.string().max(160, {
     message: 'Your bio can not be more than 160 characters.'
-  })
+  }),
+  image: z.string()
 })
