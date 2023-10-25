@@ -326,12 +326,20 @@ async function profileSubmit() {
                 ** {{ profileFormError.bio._errors[0] }} **
               </p>
             </div>
-            <button
-              form="main-form"
-              class="ml-auto rounded-lg mt-8 block bg-green-500 px-4 py-2 text-white"
-            >
-              Submit
-            </button>
+            <div class="flex items-center justify-end gap-x-4">
+              <button
+                type="submit"
+                class="ml-auto rounded-lg mt-8 block bg-green-500 px-4 py-2 text-white"
+              >
+                Submit
+              </button>
+              <RouterLink
+                :to="{ name: 'Profile', params: { username: userStore.user!.username } }"
+                class="rounded-lg mt-8 block bg-rose-500 px-4 py-2 text-white"
+              >
+                Cancel
+              </RouterLink>
+            </div>
           </form>
         </div>
       </div>
