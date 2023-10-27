@@ -45,3 +45,24 @@ export const ArticleSchema = z.object({
     image: z.string()
   })
 })
+
+export type Comment = z.infer<typeof CommentSchema>
+export const CommentSchema = z.object({
+  id: z.string(),
+  body: z.string(),
+  commentAuthor_id: z.string(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  commentAuthor: z.object({
+    id: z.string(),
+    username: z.string(),
+    name: z.string(),
+    image: z.string(),
+    bio: z.string()
+  })
+})
+
+export type AddComment = z.infer<typeof AddCommentSchema>
+export const AddCommentSchema = z.string().max(300, {
+  message: 'Your comment can not be more than 300 characters'
+})

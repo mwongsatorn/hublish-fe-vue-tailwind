@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import axios from 'axios'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useUserStore } from '@/stores/user.store'
 import { type Article } from '@/schemas/article'
+import { formatDate } from '@/helpers/formatDate'
+import ArticleCommentSection from '@/components/ArticleCommentSection.vue'
 
 const props = defineProps<{ slug: string }>()
 const article = ref<Article | null>(null)
@@ -13,16 +15,11 @@ if (response.status === 200) {
   console.log(response.data.createdAt)
   article.value = response.data as Article
 }
-
-const createdDate = computed(() => {
-  const d = new Date(article.value?.createdAt as Date)
-  return d.toLocaleDateString('en', { day: '2-digit', month: 'long', year: 'numeric' })
-})
 </script>
 
 <template>
   <main>
-    <section class="max-w-2xl mx-auto px-4 py-12 min-h-[calc(100vh-56px)]">
+    <section class="max-w-2xl mx-auto px-4 my-12">
       <div class="space-y-4">
         <h1 class="sm:text-4xl text-2xl font-bold">{{ article?.title }}</h1>
         <div class="flex items-center gap-x-4">
@@ -34,27 +31,40 @@ const createdDate = computed(() => {
           >
             {{ tag }}
           </div>
+          <span>{{ formatDate(article!.createdAt) }}</span>
         </div>
-        <div class="flex items-center justify-between flex-wrap gap-x-8">
-          <div class="flex items-center gap-x-4">
-            <div class="h-20 w-20 rounded-full bg-gray-300"></div>
-            <div class="text-sm">
-              <div class="text-lg">{{ article?.author.name }}</div>
-              <div class="space-x-4">
+        <div class="flex items-center justify-between w-full gap-x-8 flex-nowrap">
+          <RouterLink
+            :to="{ name: 'Profile', params: { username: article?.author.username } }"
+            class="flex items-center gap-x-4 overflow-hidden"
+          >
+            <img :src="article?.author.image" class="aspect-square sm:w-20 w-16 rounded-full" />
+            <div class="overflow-hidden">
+              <div class="truncate hover:underline font-bold">{{ article?.author.name }}</div>
+              <div class="space-x-4 truncate text-sm">
                 <span>@{{ article?.author.username }}</span>
-                <span>{{ createdDate }}</span>
               </div>
             </div>
-          </div>
-          <div class="flex gap-x-2 text-sm" v-if="article?.author_id === userStore.user.id">
-            <button class="px-2 py-1.5 bg-gray-200 rounded-lg">Edit</button>
+          </RouterLink>
+          <div
+            class="flex gap-x-2 text-sm shrink-0"
+            v-if="article?.author_id === userStore.user?.id"
+          >
+            <RouterLink
+              :to="{ name: 'EditArticle', params: { slug: props.slug } }"
+              class="px-2 py-1.5 bg-gray-200 rounded-lg"
+            >
+              Edit
+            </RouterLink>
             <button class="px-2 py-1.5 bg-rose-500 rounded-lg text-white">Delete</button>
           </div>
         </div>
       </div>
-      <p class="mt-8">
+      <p class="mt-8 whitespace-pre-wrap">
         {{ article?.content }}
       </p>
     </section>
+    <ArticleCommentSection :image="article!.author.image" :slug="props.slug">
+    </ArticleCommentSection>
   </main>
 </template>
