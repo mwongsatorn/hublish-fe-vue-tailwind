@@ -43,7 +43,8 @@ export const ArticleSchema = z.object({
     name: z.string(),
     bio: z.string(),
     image: z.string()
-  })
+  }),
+  favourited: z.boolean()
 })
 
 export type Comment = z.infer<typeof CommentSchema>
