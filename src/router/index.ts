@@ -33,9 +33,14 @@ const router = createRouter({
           path: 'feed',
           component: () => import('@/views/UserFeedPage.vue'),
           name: 'UserFeed',
-          beforeEnter: (to, from, next) => {
+          beforeEnter: async (to, from, next) => {
+            await new Promise((resolve) => {
+              setTimeout(() => {
+                resolve(true)
+              }, 100)
+            })
             const userStore = useUserStore()
-            if (!userStore.isLoggedIn || userStore.user.username !== to.params.username)
+            if (!userStore.isLoggedIn || userStore.user?.username !== to.params.username)
               return next({
                 name: 'UserArticles',
                 params: {
@@ -94,10 +99,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore()
-  if (!userStore.isLoggedIn) {
-    await userStore.refreshAccessToken()
-  }
-  if (to.meta?.requireAuth && !userStore.isLoggedIn) {
+  if (to.meta.requireAuth && !userStore.isLoggedIn) {
     next({ name: 'Login' })
   } else next()
 })

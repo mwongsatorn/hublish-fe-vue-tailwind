@@ -82,17 +82,8 @@ async function emailSubmit() {
     return
   }
   const response = await axios.put('/api/users/settings/email', validate.data)
-  if (response.status === 400) {
+  if (response.status !== 200 && response.status !== 409) {
     changeSettingsError.value = 'Something went wrong.'
-    return
-  }
-  if (response.status === 401) {
-    if (response.data?.error !== 'Token expired') {
-      changeSettingsError.value = 'Your password is incorrect.'
-      return
-    }
-    await userStore.refreshAccessToken()
-    await emailSubmit()
     return
   }
   if (response.status === 409) {
@@ -111,19 +102,11 @@ async function passwordSubmit() {
     return
   }
   const response = await axios.put('/api/users/settings/password', validate.data)
-  if (response.status === 400) {
+  if (response.status !== 200) {
     changeSettingsError.value = 'Something went wrong.'
     return
   }
-  if (response.status === 401) {
-    if (response.data?.error !== 'Token expired') {
-      changeSettingsError.value = 'Your password is incorrect.'
-      return
-    }
-    await userStore.refreshAccessToken()
-    await passwordSubmit()
-    return
-  }
+
   alert('Successfully changed your password')
   changePassword.value = false
 }
@@ -139,23 +122,15 @@ async function profileSubmit() {
     return
   }
   const response = await axios.put('/api/users/settings/profile', validate.data)
-  if (response.status === 400) {
+  if (response.status !== 200) {
     changeSettingsError.value = 'Something went wrong.'
     return
   }
-  if (response.status === 401) {
-    if (response.data?.error !== 'Token expired') {
-      changeSettingsError.value = 'Your password is incorrect.'
-      return
-    }
-    await userStore.refreshAccessToken()
-    await emailSubmit()
-    return
-  }
+
   alert('Successfully changed your profile')
   userStore.user!.name = validate.data.name
   userStore.user!.bio = validate.data.bio
-  userStore.user!.image = validate.data.image
+  userStore.user!.image = validate.data.image || userStore.user!.image
 }
 </script>
 

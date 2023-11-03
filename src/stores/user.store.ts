@@ -17,24 +17,21 @@ export const useUserStore = defineStore('user', {
   actions: {
     async login(details: { username: string; password: string }) {
       const response = await axios.post<User>('/api/auth/login', details)
-
-      if (response.status === 401) throw 'Username or password is incorrect'
-      this.user = response.data
+      const { accessToken, ...user } = response.data
+      this.user = user
+      this.accessToken = accessToken!
+      this.isLoggedIn = true
     },
 
     async getUserProfile() {
       const response = await axios.get<User>('/api/users/current')
-      if (response.status === 401) {
-        await this.refreshAccessToken()
-      }
       this.user = response.data
     },
 
     async refreshAccessToken() {
       const response = await axios.get<{ accessToken: string }>('/api/auth/refresh')
-      if (response.status !== 200) return
       this.accessToken = response.data.accessToken
-      await this.getUserProfile()
+      if (!this.user) await this.getUserProfile()
       this.isLoggedIn = true
     },
 
