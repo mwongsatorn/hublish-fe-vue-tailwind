@@ -5,10 +5,10 @@ import axios from 'axios'
 import ArticleCard from '@/components/ArticleCard.vue'
 import { ArticleSchema, type Article } from '@/schemas/article'
 
-const props = defineProps<{ user_id: string }>()
+const props = defineProps<{ username: string }>()
 
 const userFavouriteArticles = ref<Article[] | null>(null)
-const response = await axios.get(`/api/articles/${props.user_id}/favourite`)
+const response = await axios.get(`/api/articles/${props.username}/favourite`)
 if (response.status === 200) {
   const validateRes = z.array(ArticleSchema).safeParse(response.data)
   if (!validateRes.success) throw 'Error'

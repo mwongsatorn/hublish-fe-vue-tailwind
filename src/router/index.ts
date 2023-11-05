@@ -33,6 +33,7 @@ const router = createRouter({
           path: 'feed',
           component: () => import('@/views/UserFeedPage.vue'),
           name: 'UserFeed',
+          props: true,
           beforeEnter: async (to, from, next) => {
             await new Promise((resolve) => {
               setTimeout(() => {
@@ -54,12 +55,14 @@ const router = createRouter({
         {
           path: 'articles',
           component: () => import('@/views/UserArticlesPage.vue'),
-          name: 'UserArticles'
+          name: 'UserArticles',
+          props: true
         },
         {
           path: 'favourite',
           component: () => import('@/views/UserFavouriteArticlesPage.vue'),
-          name: 'UserFavouriteArticles'
+          name: 'UserFavouriteArticles',
+          props: true
         }
       ]
     },

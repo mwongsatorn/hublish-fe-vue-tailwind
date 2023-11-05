@@ -46,20 +46,17 @@ if (response.status === 200) {
           </p>
         </div>
         <div class="flex items-center bg-gray-100">
-          <RouterLink
-            :to="{ name: 'UserFeed', params: { username: props.username } }"
-            class="py-4 w-full text-center hover:bg-gray-200"
-          >
+          <RouterLink :to="{ name: 'UserFeed' }" class="py-4 w-full text-center hover:bg-gray-200">
             Feed
           </RouterLink>
           <RouterLink
-            :to="{ name: 'UserArticles', params: { username: props.username } }"
+            :to="{ name: 'UserArticles' }"
             class="py-4 w-full text-center hover:bg-gray-200"
           >
             Articles
           </RouterLink>
           <RouterLink
-            :to="{ name: 'UserFavouriteArticles', params: { username: props.username } }"
+            :to="{ name: 'UserFavouriteArticles' }"
             class="py-4 w-full text-center hover:bg-gray-200"
           >
             Favourite
@@ -67,7 +64,7 @@ if (response.status === 200) {
         </div>
       </section>
       <section class="py-12">
-        <RouterView :user_id="user?.id"></RouterView>
+        <RouterView></RouterView>
       </section>
     </div>
   </main>
