@@ -97,8 +97,13 @@ const router = createRouter({
   ]
 })
 
+let visited = false
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore()
+  if (!visited) {
+    await userStore.refreshAccessToken().catch((e) => {})
+    visited = true
+  }
   if (to.meta.requireAuth && !userStore.isLoggedIn) {
     next({ name: 'Login' })
   } else next()
