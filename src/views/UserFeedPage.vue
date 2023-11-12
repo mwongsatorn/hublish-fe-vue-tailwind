@@ -1,9 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter, onBeforeRouteUpdate } from 'vue-router'
+import { useUserStore } from '@/stores/user.store'
 import { z } from 'zod'
 import axios from 'axios'
 import ArticleCard from '@/components/ArticleCard.vue'
 import { ArticleSchema, type Article } from '@/schemas/article'
+
+const props = defineProps<{ username: string }>()
+
+const router = useRouter()
+
+const userStore = useUserStore()
 
 const feedArticles = ref<Article[] | null>(null)
 const response = await axios.get('/api/articles/feed')
@@ -13,6 +21,12 @@ if (response.status === 200) {
 
   feedArticles.value = validateRes.data
 }
+
+onBeforeRouteUpdate((to) => {
+  if (userStore.user?.username !== to.params.username) {
+    router.replace({ name: 'UserArticles', params: { username: to.params.username } })
+  }
+})
 </script>
 
 <template>
