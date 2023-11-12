@@ -67,6 +67,26 @@ const router = createRouter({
       ]
     },
     {
+      path: '/:username',
+      name: 'UserFollowRelations',
+      component: () => import('@/views/FollowRelationsPage.vue'),
+      props: true,
+      children: [
+        {
+          path: 'followings',
+          name: 'UserFollowings',
+          component: () => import('@/views/UserFollowingsPage.vue'),
+          props: true
+        },
+        {
+          path: 'followers',
+          name: 'UserFollowers',
+          component: () => import('@/views/UserFollowersPage.vue'),
+          props: true
+        }
+      ]
+    },
+    {
       path: '/settings',
       name: 'Settings',
       component: () => import('@/views/SettingsPage.vue'),
@@ -97,7 +117,10 @@ const router = createRouter({
       component: () => import('@/views/ArticleDetailsPage.vue'),
       props: true
     }
-  ]
+  ],
+  scrollBehavior(to, from, savedPosition) {
+    return { top: 0 }
+  }
 })
 
 let visited = false
