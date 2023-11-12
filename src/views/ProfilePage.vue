@@ -14,6 +14,28 @@ if (response.status === 200) {
   if (!validateRes.success) throw 'Error'
   user.value = validateRes.data
 }
+
+async function followUser() {
+  const response = await axios.post(`/api/users/${user.value?.username}/follow`)
+  if (response.status !== 201) {
+    console.log('Error')
+    return
+  }
+  user.value!.followed = true
+  user.value!.followerCount++
+}
+
+async function unfollowUser() {
+  const unfollow = confirm('Are you sure you want to unfollow this person')
+  if (!unfollow) return
+  const response = await axios.delete(`/api/users/${user.value?.username}/follow`)
+  if (response.status !== 200) {
+    console.log('Error')
+    return
+  }
+  user.value!.followed = false
+  user.value!.followerCount--
+}
 </script>
 
 <template>
@@ -28,8 +50,28 @@ if (response.status === 200) {
             class="top-0 -translate-y-[calc(50%+16px)] sm:h-[200px] sm:w-[200px] h-[150px] w-[150px] shrink-0 rounded-full border-4 border-white bg-gray-200"
           />
 
-          <div v-if="userStore.user?.id === user?.id" class="ml-auto">
-            <button class="bg-white border-2 py-2 px-4 rounded-lg">Edit profile</button>
+          <div class="ml-auto">
+            <RouterLink
+              :to="{ name: 'Settings' }"
+              v-if="userStore.user?.id === user?.id"
+              class="px-4 py-2 block bg-gray-100 hover:bg-gray-200 rounded-lg"
+            >
+              Edit profile
+            </RouterLink>
+            <button
+              v-else-if="!user?.followed"
+              @click="followUser"
+              class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg"
+            >
+              Follow
+            </button>
+            <button
+              v-else-if="user?.followed"
+              @click="unfollowUser"
+              class="px-4 py-2 bg-gray-100 hover:bg-rose-600 hover:text-white rounded-lg"
+            >
+              Unfollow
+            </button>
           </div>
         </div>
         <div class="space-y-2 px-4 py-4">
