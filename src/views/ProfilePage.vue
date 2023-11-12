@@ -40,10 +40,21 @@ if (response.status === 200) {
           <p class="sm:text-start">
             {{ user?.bio }}
           </p>
-          <p>
-            follower: {{ user?.followerCount }} following:
-            {{ user?.followingCount }}
-          </p>
+          <div class="flex items-center gap-x-4">
+            <RouterLink
+              class="hover:underline hover:font-bold"
+              :to="{ name: 'UserFollowers', params: { username: user?.username } }"
+            >
+              followers: {{ user?.followerCount }}
+            </RouterLink>
+
+            <RouterLink
+              class="hover:underline hover:font-bold"
+              :to="{ name: 'UserFollowings', params: { username: user?.username } }"
+            >
+              followings: {{ user?.followingCount }}
+            </RouterLink>
+          </div>
         </div>
         <div class="flex items-center bg-gray-100">
           <RouterLink :to="{ name: 'UserFeed' }" class="py-4 w-full text-center hover:bg-gray-200">

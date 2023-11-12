@@ -29,6 +29,7 @@ export const LogInSchema = z.object({
 })
 
 export type User = z.infer<typeof UserSchema>
+export type ShortUser = Omit<User, 'accessToken' | 'email' | 'followerCount' | 'followingCount'>
 export const UserSchema = z.object({
   id: z.string(),
   email: z.string(),
@@ -38,7 +39,8 @@ export const UserSchema = z.object({
   image: z.string(),
   accessToken: z.string().optional(),
   followerCount: z.number(),
-  followingCount: z.number()
+  followingCount: z.number(),
+  followed: z.boolean().optional()
 })
 
 export type ChangeEmail = z.infer<typeof ChangeEmailSchema>
@@ -70,5 +72,5 @@ export const ChangeProfileSchema = z.object({
   bio: z.string().max(160, {
     message: 'Your bio can not be more than 160 characters.'
   }),
-  image: z.string()
+  image: z.string().optional()
 })
