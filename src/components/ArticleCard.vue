@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useUserStore } from '@/stores/user.store'
+import { useRouter } from 'vue-router'
 import { type Article } from '@/schemas/article'
 import IconHeart from '@/components/icons/Heart.vue'
 import axios from 'axios'
@@ -8,10 +10,14 @@ const props = defineProps<{
   article: Article
 }>()
 
+const router = useRouter()
+const userStore = useUserStore()
+
 const isFavourited = ref(props.article.favourited)
 const favCount = ref(props.article.favouriteCount)
 
 async function toggleFavourite() {
+  if (!userStore.isLoggedIn) return router.push({ name: 'Login' })
   if (!isFavourited.value) {
     const response = await axios.post(`/api/articles/${props.article.slug}/favourite`)
     if (response.status !== 200) return

@@ -34,6 +34,7 @@ async function deleteArticle() {
 }
 
 async function toggleFavourite() {
+  if (!userStore.isLoggedIn) return router.push({ name: 'Login' })
   if (!article.value?.favourited) {
     const response = await axios.post(`/api/articles/${article.value?.slug}/favourite`)
     if (response.status !== 200) return
