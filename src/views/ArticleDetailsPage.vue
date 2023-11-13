@@ -8,6 +8,7 @@ import { formatDate } from '@/helpers/formatDate'
 import IconEdit from '@/components/icons/Edit.vue'
 import IconDelete from '@/components/icons/Delete.vue'
 import IconMore from '@/components/icons/More.vue'
+import IconHeart from '@/components/icons/Heart.vue'
 import ArticleCommentSection from '@/components/ArticleCommentSection.vue'
 
 const props = defineProps<{ slug: string }>()
@@ -17,10 +18,9 @@ const userStore = useUserStore()
 const isMenuOpened = ref(false)
 const menu = ref<HTMLElement | null>(null)
 
-const response = await axios.get(`/api/articles/${props.slug}`)
+const response = await axios.get<Article>(`/api/articles/${props.slug}`)
 if (response.status === 200) {
-  console.log(response.data.createdAt)
-  article.value = response.data as Article
+  article.value = response.data
 }
 
 async function deleteArticle() {
@@ -30,6 +30,20 @@ async function deleteArticle() {
     const response = await axios.delete(`/api/articles/${article.value?.slug}`)
     if (response.status !== 204) return console.log('error')
     router.push({ name: 'Profile', params: { username: userStore.user?.username } })
+  }
+}
+
+async function toggleFavourite() {
+  if (!article.value?.favourited) {
+    const response = await axios.post(`/api/articles/${article.value?.slug}/favourite`)
+    if (response.status !== 200) return
+    article.value!.favourited = true
+    article.value!.favouriteCount++
+  } else {
+    const response = await axios.delete(`/api/articles/${article.value?.slug}/favourite`)
+    if (response.status !== 200) return
+    article.value!.favourited = false
+    article.value!.favouriteCount--
   }
 }
 
@@ -80,10 +94,20 @@ onUnmounted(() => {
             </div>
           </RouterLink>
           <div class="flex items-center justify-end gap-x-2">
+            <button
+              @click="toggleFavourite"
+              :class="[article?.favourited ? 'bg-rose-500 text-white' : 'bg-gray-200']"
+              class="flex items-center gap-x-2 rounded-lg px-4 py-2 hover:bg-gray-400 hover:text-white transition-colors"
+            >
+              <span>
+                {{ article?.favouriteCount }}
+              </span>
+              <IconHeart class="h-6 w-6 text-white"></IconHeart>
+            </button>
             <div
               ref="menu"
               class="flex self-stretch relative"
-              v-if="userStore.user!.id === article?.author_id!"
+              v-if="userStore.user?.id === article?.author_id"
             >
               <button @click="isMenuOpened = true">
                 <IconMore class="w-6 h-6 text-black"></IconMore>
@@ -113,7 +137,7 @@ onUnmounted(() => {
         {{ article?.content }}
       </p>
     </section>
-    <ArticleCommentSection :image="article!.author.image" :slug="props.slug">
+    <ArticleCommentSection :image="article?.author.image!" :slug="props.slug">
     </ArticleCommentSection>
   </main>
 </template>
