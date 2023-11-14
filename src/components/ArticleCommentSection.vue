@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { useUserStore } from '@/stores/user.store'
 import { AddCommentSchema, type Comment, type AddComment } from '@/schemas/article'
 import CommentBox from './CommentBox.vue'
 import axios from 'axios'
 import type { ZodFormattedError } from 'zod'
 
 const props = defineProps<{ slug: string; image: string }>()
+const userStore = useUserStore()
 
 const comment = ref('')
 const articleComments = ref<Comment[] | null>(null)
@@ -25,7 +27,6 @@ watch(comment, () => {
 })
 
 async function postComment() {
-  console.log(`${comment.value}`)
   const validateComment = AddCommentSchema.safeParse(comment.value)
   if (!validateComment.success) {
     commentInputError.value = validateComment.error.format()
@@ -50,19 +51,22 @@ async function deleteComment(id: string, index: number) {
 <template>
   <section class="max-w-2xl mx-auto px-4 my-12">
     <h1 class="sm:text-4xl text-2xl font-bold">Comments</h1>
-    <div class="w-full border-2 block px-4 py-4 mt-4" :class="[isFocused ? 'border-black' : '']">
+    <div
+      v-if="userStore.isLoggedIn"
+      class="w-full border-2 block px-4 py-4 mt-4"
+      :class="[isFocused ? 'border-black' : '']"
+    >
       <form @submit.prevent="postComment" class="block h-full">
         <div class="flex gap-x-4">
-          <img :src="props.image" class="h-12 w-12 rounded-full" />
-          <div
+          <img :src="userStore.user?.image" class="h-12 w-12 rounded-full" />
+          <p
             ref="commentInput"
             contenteditable="true"
             @input="comment = ($event.target as HTMLElement).textContent!"
-            @keyup.enter.exact="postComment"
             @focus="isFocused = true"
             @blur="isFocused = false"
             placeholder="Write your comment here!"
-            class="w-full group px-2 whitespace-pre-wrap focus:outline-none resize-none overflow-hidden empty:before:[&:not(:focus)]:content-[attr(placeholder)] before:cursor-text"
+            class="w-full px-2 inline-block whitespace-pre-wrap focus:outline-none overflow-hidden empty:before:[&:not(:focus)]:content-[attr(placeholder)] before:cursor-text"
           />
         </div>
         <div class="flex mt-4">
@@ -77,6 +81,16 @@ async function deleteComment(id: string, index: number) {
           </button>
         </div>
       </form>
+    </div>
+    <div class="mt-8" v-else>
+      <RouterLink class="text-green-500 hover:text-green-600" :to="{ name: 'Signup' }">
+        Sign up
+      </RouterLink>
+      and
+      <RouterLink class="text-green-500 hover:text-green-600" :to="{ name: 'Login' }">
+        Log in
+      </RouterLink>
+      first before add comment to this article.
     </div>
     <div class="mt-8">
       <CommentBox
