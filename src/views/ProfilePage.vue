@@ -1,26 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import axios from 'axios'
-import { UserSchema, type User } from '@/schemas/user'
+import { type User } from '@/schemas/user'
 import { useUserStore } from '@/stores/user.store'
+import IconWrite from '@/components/icons/Write.vue'
 
 const user = ref<User | null>(null)
 const userStore = useUserStore()
 
 const props = defineProps<{ username: string }>()
-const response = await axios.get(`/api/users/${props.username}/profile`)
-if (response.status === 200) {
-  const validateRes = UserSchema.safeParse(response.data)
-  if (!validateRes.success) throw 'Error'
-  user.value = validateRes.data
-}
+const response = await axios.get<User>(`/api/users/${props.username}/profile`)
+user.value = response.data
 
 async function followUser() {
-  const response = await axios.post(`/api/users/${user.value?.username}/follow`)
-  if (response.status !== 201) {
-    console.log('Error')
-    return
-  }
+  await axios.post(`/api/users/${user.value?.username}/follow`)
   user.value!.followed = true
   user.value!.followerCount++
 }
@@ -28,11 +21,7 @@ async function followUser() {
 async function unfollowUser() {
   const unfollow = confirm('Are you sure you want to unfollow this person')
   if (!unfollow) return
-  const response = await axios.delete(`/api/users/${user.value?.username}/follow`)
-  if (response.status !== 200) {
-    console.log('Error')
-    return
-  }
+  await axios.delete(`/api/users/${user.value?.username}/follow`)
   user.value!.followed = false
   user.value!.followerCount--
 }
@@ -42,7 +31,7 @@ async function unfollowUser() {
   <main>
     <div class="max-w-7xl mx-auto">
       <section>
-        <div class="h-[250px] bg-green-400"></div>
+        <div class="h-[250px] bg-gray-300"></div>
 
         <div class="flex items-start relative py-4 px-4 sm:h-[100px] h-[75px]">
           <img
@@ -52,12 +41,14 @@ async function unfollowUser() {
 
           <div class="ml-auto">
             <RouterLink
-              :to="{ name: 'Settings' }"
               v-if="userStore.user?.id === user?.id"
-              class="px-4 py-2 block bg-gray-100 hover:bg-gray-200 rounded-lg"
+              :to="{ name: 'CreateArticle' }"
+              class="px-4 py-2 flex items-center gap-x-2 bg-gray-100 hover:bg-gray-200 rounded-lg"
             >
-              Edit profile
+              <span class="hidden sm:inline-block">Write article</span>
+              <IconWrite class="sm:w-6 sm:h-6 w-4 h-4"></IconWrite>
             </RouterLink>
+
             <button
               v-else-if="!user?.followed"
               @click="followUser"
