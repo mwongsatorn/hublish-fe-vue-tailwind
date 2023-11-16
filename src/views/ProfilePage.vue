@@ -4,6 +4,7 @@ import axios from 'axios'
 import { type User } from '@/schemas/user'
 import { useUserStore } from '@/stores/user.store'
 import IconWrite from '@/components/icons/Write.vue'
+import { onBeforeRouteUpdate } from 'vue-router'
 
 const user = ref<User | null>(null)
 const userStore = useUserStore()
@@ -25,6 +26,13 @@ async function unfollowUser() {
   user.value!.followed = false
   user.value!.followerCount--
 }
+
+onBeforeRouteUpdate(async (to, from) => {
+  if (to.params.username !== from.params.username) {
+    const response = await axios.get<User>(`/api/users/${to.params.username}/profile`)
+    user.value = response.data
+  }
+})
 </script>
 
 <template>
