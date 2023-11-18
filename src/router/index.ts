@@ -113,6 +113,29 @@ const router = createRouter({
       name: 'ArticleDetails',
       component: () => import('@/views/ArticleDetailsPage.vue'),
       props: true
+    },
+    {
+      path: '/search',
+      name: 'Search',
+      component: () => import('@/views/SearchPage.vue'),
+      redirect: { name: 'SearchArticles' },
+      children: [
+        {
+          path: 'articles',
+          name: 'SearchArticles',
+          component: () => import('@/views/SearchArticlesPage.vue')
+        },
+        {
+          path: 'tags',
+          name: 'SearchTags',
+          component: () => import('@/views/SearchTagsPage.vue')
+        },
+        {
+          path: 'people',
+          name: 'SearchPeople',
+          component: () => import('@/views/SearchPeoplePage.vue')
+        }
+      ]
     }
   ],
   scrollBehavior(to, from, savedPosition) {
