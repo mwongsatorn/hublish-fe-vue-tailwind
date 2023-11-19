@@ -40,6 +40,7 @@ export const useUserStore = defineStore('user', {
       if (response.status !== 204) throw 'Something went wrong'
       this.isLoggedIn = false
       this.user = null
+      this.accessToken = null
     }
   }
 })
