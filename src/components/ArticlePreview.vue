@@ -63,7 +63,7 @@ async function toggleFavourite() {
           <span>Tags: </span>
           <Router-Link
             class="font-bold px-2 py-1 bg-gray-200 rounded-lg text-sm"
-            to="/"
+            :to="{ name: 'SearchTags', query: { query: tag } }"
             v-for="(tag, index) in props.article.tags"
             :key="index"
           >
