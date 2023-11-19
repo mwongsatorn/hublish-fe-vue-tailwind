@@ -2,7 +2,7 @@
 import axios from 'axios'
 import { ref } from 'vue'
 import { type Article } from '@/schemas/article'
-import ArticleCard from '@/components/ArticleCard.vue'
+import ArticlePreview from '@/components/ArticlePreview.vue'
 
 const latestArticles = ref<Article[] | null>(null)
 
@@ -25,8 +25,8 @@ latestArticles.value = response.data
     <section class="max-w-7xl mx-auto py-12 space-y-4">
       <h1 class="px-4 sm:text-4xl text-2xl font-bold">Latest articles</h1>
       <div class="mt-8">
-        <ArticleCard :article="article" v-for="article in latestArticles" :key="article.id">
-        </ArticleCard>
+        <ArticlePreview :article="article" v-for="article in latestArticles" :key="article.id">
+        </ArticlePreview>
       </div>
     </section>
   </main>

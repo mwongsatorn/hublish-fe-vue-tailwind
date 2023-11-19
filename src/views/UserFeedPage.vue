@@ -4,7 +4,7 @@ import { useRouter, onBeforeRouteUpdate } from 'vue-router'
 import { useUserStore } from '@/stores/user.store'
 import { z } from 'zod'
 import axios from 'axios'
-import ArticleCard from '@/components/ArticleCard.vue'
+import ArticlePreview from '@/components/ArticlePreview.vue'
 import { ArticleSchema, type Article } from '@/schemas/article'
 
 const props = defineProps<{ username: string }>()
@@ -31,7 +31,7 @@ onBeforeRouteUpdate((to) => {
 
 <template>
   <div class="space-y-4">
-    <ArticleCard :article="article" v-for="(article, index) in feedArticles" :key="index">
-    </ArticleCard>
+    <ArticlePreview :article="article" v-for="(article, index) in feedArticles" :key="index">
+    </ArticlePreview>
   </div>
 </template>

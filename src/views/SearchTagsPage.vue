@@ -3,7 +3,7 @@ import type { Article } from '@/schemas/article'
 import axios from 'axios'
 import { ref } from 'vue'
 import { onBeforeRouteUpdate, useRoute } from 'vue-router'
-import ArticleCard from '@/components/ArticleCard.vue'
+import ArticlePreview from '@/components/ArticlePreview.vue'
 
 const searchArticles = ref<Article[] | []>([])
 const route = useRoute()
@@ -23,8 +23,8 @@ onBeforeRouteUpdate(async (to) => {
 
 <template>
   <div v-if="searchArticles.length > 0" class="mt-8">
-    <ArticleCard :article="article" v-for="article in searchArticles" :key="article.id">
-    </ArticleCard>
+    <ArticlePreview :article="article" v-for="article in searchArticles" :key="article.id">
+    </ArticlePreview>
   </div>
   <p class="px-4 mt-8" v-else>No result found. Make sure all the words spell correctly.</p>
 </template>
