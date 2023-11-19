@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import { useUserStore } from '@/stores/user.store'
 import { AddCommentSchema, type Comment, type AddComment } from '@/schemas/article'
 import CommentBox from './CommentBox.vue'
@@ -12,7 +12,6 @@ const userStore = useUserStore()
 const comment = ref('')
 const articleComments = ref<Comment[] | null>(null)
 const commentInputError = ref<ZodFormattedError<AddComment> | null>()
-const addCommentError = ref('')
 const commentInput = ref<HTMLElement | null>(null)
 const isFocused = ref(false)
 
@@ -26,24 +25,29 @@ watch(comment, () => {
   if (commentInputError.value) commentInputError.value = null
 })
 
+function resizeTextArea() {
+  commentInput.value!.style.height = 'auto'
+  commentInput.value!.style.height = commentInput.value!.scrollHeight + 'px'
+}
+
 async function postComment() {
-  const validateComment = AddCommentSchema.safeParse(comment.value)
+  const trimmedComment = comment.value.replace(/[ \t\r\n]+$/, '')
+  const validateComment = AddCommentSchema.safeParse(trimmedComment)
   if (!validateComment.success) {
     commentInputError.value = validateComment.error.format()
     return
   }
   const response = await axios.post<Comment>(`/api/articles/${props.slug}/comments`, {
-    body: comment.value
+    body: validateComment.data
   })
-  if (response.status !== 201) addCommentError.value = 'Error'
   articleComments.value?.push(response.data)
   comment.value = ''
-  commentInput.value!.textContent = ''
+  await nextTick()
+  resizeTextArea()
 }
 
 async function deleteComment(id: string, index: number) {
-  const response = await axios.delete(`/api/articles/${props.slug}/comments/${id}`)
-  if (response.status !== 204) throw 'Error'
+  await axios.delete(`/api/articles/${props.slug}/comments/${id}`)
   articleComments.value?.splice(index, 1)
 }
 </script>
@@ -56,17 +60,17 @@ async function deleteComment(id: string, index: number) {
       class="w-full border-2 block px-4 py-4 mt-4"
       :class="[isFocused ? 'border-black' : '']"
     >
-      <form @submit.prevent="postComment" class="block h-full">
+      <form @submit.prevent="postComment" class="block h-max">
         <div class="flex gap-x-4">
           <img :src="userStore.user?.image" class="h-12 w-12 rounded-full" />
-          <p
+          <textarea
             ref="commentInput"
-            contenteditable="true"
-            @input="comment = ($event.target as HTMLElement).textContent!"
+            v-model="comment"
+            @input="resizeTextArea"
             @focus="isFocused = true"
             @blur="isFocused = false"
             placeholder="Write your comment here!"
-            class="w-full px-2 inline-block whitespace-pre-wrap focus:outline-none overflow-hidden empty:before:[&:not(:focus)]:content-[attr(placeholder)] before:cursor-text"
+            class="overflow-hidden resize-none w-full px-2 inline-block whitespace-pre-wrap focus:outline-none"
           />
         </div>
         <div class="flex mt-4">
