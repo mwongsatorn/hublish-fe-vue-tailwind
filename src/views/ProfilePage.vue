@@ -1,30 +1,37 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import axios from 'axios'
 import { type User } from '@/schemas/user'
 import { useUserStore } from '@/stores/user.store'
 import IconWrite from '@/components/icons/Write.vue'
-import { onBeforeRouteUpdate } from 'vue-router'
+import { onBeforeRouteUpdate, useRouter } from 'vue-router'
 
 const user = ref<User | null>(null)
 const userStore = useUserStore()
+const router = useRouter()
 
 const props = defineProps<{ username: string }>()
+const followStatus = computed(() => {
+  if (user.value?.followed) return 'Unfollow'
+  else return 'Follow'
+})
+
 const response = await axios.get<User>(`/api/users/${props.username}/profile`)
 user.value = response.data
 
-async function followUser() {
-  await axios.post(`/api/users/${user.value?.username}/follow`)
-  user.value!.followed = true
-  user.value!.followerCount++
-}
-
-async function unfollowUser() {
-  const unfollow = confirm('Are you sure you want to unfollow this person')
-  if (!unfollow) return
-  await axios.delete(`/api/users/${user.value?.username}/follow`)
-  user.value!.followed = false
-  user.value!.followerCount--
+async function followHandler() {
+  if (!userStore.isLoggedIn) return router.push({ name: 'Login' })
+  if (user.value?.followed) {
+    const unfollow = confirm('Are you sure you want to unfollow this person')
+    if (!unfollow) return
+    await axios.delete(`/api/users/${user.value?.username}/follow`)
+    user.value!.followed = false
+    user.value!.followerCount--
+  } else {
+    await axios.post(`/api/users/${user.value?.username}/follow`)
+    user.value!.followed = true
+    user.value!.followerCount++
+  }
 }
 
 onBeforeRouteUpdate(async (to, from) => {
@@ -58,18 +65,12 @@ onBeforeRouteUpdate(async (to, from) => {
             </RouterLink>
 
             <button
-              v-else-if="!user?.followed"
-              @click="followUser"
-              class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg"
+              @click="followHandler"
+              v-else
+              :class="[user?.followed ? 'hover:bg-rose-600 hover:text-white' : 'hover:bg-gray-200']"
+              class="ml-auto self-center flex items-center gap-x-4 px-4 py-2 bg-gray-100 rounded-lg"
             >
-              Follow
-            </button>
-            <button
-              v-else-if="user?.followed"
-              @click="unfollowUser"
-              class="px-4 py-2 bg-gray-100 hover:bg-rose-600 hover:text-white rounded-lg"
-            >
-              Unfollow
+              <span class="hidden sm:inline-block">{{ followStatus }}</span>
             </button>
           </div>
         </div>

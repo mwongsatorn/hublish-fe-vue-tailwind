@@ -1,31 +1,30 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import type { ShortUser } from '@/schemas/user'
 import axios from 'axios'
+import { useUserStore } from '@/stores/user.store'
 
 const props = defineProps<{ user: ShortUser }>()
+const userStore = useUserStore()
+const router = useRouter()
 const followed = ref(props.user.followed!)
+const followStatus = computed(() => {
+  if (followed.value) return 'Unfollow'
+  else return 'Follow'
+})
 
-async function followUser() {
-  const response = await axios.post(`/api/users/${props.user.username}/follow`)
-  if (response.status !== 201) {
-    console.log('Error')
-    return
+async function clickHandler() {
+  if (!userStore.isLoggedIn) return router.push({ name: 'Login' })
+  if (followed.value) {
+    const unfollow = confirm('Are you sure you want to unfollow this person')
+    if (!unfollow) return
+    await axios.delete(`/api/users/${props.user.username}/follow`)
+    followed.value = false
+  } else {
+    await axios.post(`/api/users/${props.user.username}/follow`)
+    followed.value = true
   }
-  console.log(response)
-  followed.value = true
-}
-
-async function unfollowUser() {
-  const unfollow = confirm('Are you sure you want to unfollow this person')
-  if (!unfollow) return
-  const response = await axios.delete(`/api/users/${props.user.username}/follow`)
-  if (response.status !== 200) {
-    console.log('Error')
-    console.log(response)
-    return
-  }
-  followed.value = false
 }
 </script>
 
@@ -40,18 +39,12 @@ async function unfollowUser() {
       <p>{{ props.user.bio }}</p>
     </div>
     <button
-      @click="followUser"
-      v-if="!followed"
-      class="ml-auto self-center px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg"
+      @click="clickHandler"
+      v-if="userStore.user?.username !== user.username"
+      :class="[followed ? 'hover:bg-rose-600 hover:text-white' : 'hover:bg-gray-200']"
+      class="ml-auto self-center flex items-center gap-x-4 px-4 py-2 bg-gray-100 rounded-lg"
     >
-      Follow
-    </button>
-    <button
-      @click="unfollowUser"
-      v-else
-      class="ml-auto self-center px-4 py-2 bg-gray-100 hover:bg-rose-600 hover:text-white rounded-lg"
-    >
-      Unfollow
+      <span class="hidden sm:inline-block">{{ followStatus }}</span>
     </button>
   </div>
 </template>
