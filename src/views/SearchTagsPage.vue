@@ -14,7 +14,7 @@ if (route.query.query !== '') {
 }
 
 onBeforeRouteUpdate(async (to) => {
-  if (route.query.title !== to.query.title && to.query.title !== '') {
+  if (route.query.query !== to.query.query && to.query.query !== '') {
     const response = await axios.get('/api/articles', { params: { tags: to.query.query } })
     searchArticles.value = response.data
   }
