@@ -4,17 +4,24 @@ import { useRouter } from 'vue-router'
 import type { ShortUser } from '@/schemas/user'
 import axios from 'axios'
 import { useUserStore } from '@/stores/user.store'
+import IconFollow from '@/components/icons/Follow.vue'
+import IconUnfollow from '@/components/icons/Unfollow.vue'
 
 const props = defineProps<{ user: ShortUser }>()
 const userStore = useUserStore()
 const router = useRouter()
 const followed = ref(props.user.followed!)
-const followStatus = computed(() => {
+const followStatusText = computed(() => {
   if (followed.value) return 'Unfollow'
   else return 'Follow'
 })
 
-async function clickHandler() {
+const followStatusIcon = {
+  Follow: IconFollow,
+  Unfollow: IconUnfollow
+}
+
+async function followHandler() {
   if (!userStore.isLoggedIn) return router.push({ name: 'Login' })
   if (followed.value) {
     const unfollow = confirm('Are you sure you want to unfollow this person')
@@ -29,22 +36,26 @@ async function clickHandler() {
 </script>
 
 <template>
-  <div class="flex items-start gap-x-6 px-4 py-2">
-    <div>
+  <RouterLink
+    :to="{ name: 'Profile', params: { username: user.username } }"
+    class="flex items-start gap-x-6 px-4 py-2"
+  >
+    <div class="shrink-0">
       <img class="sm:h-20 sm:w-20 h-16 w-16" :src="props.user.image" alt="" />
     </div>
-    <div>
-      <p class="font-bold hover:underline">{{ props.user.name }}</p>
-      <p class="text-gray-600">{{ props.user.username }}</p>
-      <p>{{ props.user.bio }}</p>
+    <div class="overflow-hidden">
+      <p class="font-bold hover:underline truncate">{{ props.user.name }}</p>
+      <p class="text-gray-600 truncate">{{ props.user.username }}</p>
+      <p class="line-clamp-2">{{ props.user.bio }}</p>
     </div>
     <button
-      @click="clickHandler"
+      @click="followHandler"
       v-if="userStore.user?.username !== user.username"
       :class="[followed ? 'hover:bg-rose-600 hover:text-white' : 'hover:bg-gray-200']"
       class="ml-auto self-center flex items-center gap-x-4 px-4 py-2 bg-gray-100 rounded-lg"
     >
-      <span class="hidden sm:inline-block">{{ followStatus }}</span>
+      <span class="hidden sm:inline-block">{{ followStatusText }}</span>
+      <component class="h-4 w-4" :is="followStatusIcon[followStatusText]"></component>
     </button>
-  </div>
+  </RouterLink>
 </template>

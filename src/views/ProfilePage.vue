@@ -3,18 +3,24 @@ import { computed, ref } from 'vue'
 import axios from 'axios'
 import { type User } from '@/schemas/user'
 import { useUserStore } from '@/stores/user.store'
-import IconWrite from '@/components/icons/Write.vue'
 import { onBeforeRouteUpdate, useRouter } from 'vue-router'
+import IconWrite from '@/components/icons/Write.vue'
+import IconFollow from '@/components/icons/Follow.vue'
+import IconUnfollow from '@/components/icons/Unfollow.vue'
 
 const user = ref<User | null>(null)
 const userStore = useUserStore()
 const router = useRouter()
 
 const props = defineProps<{ username: string }>()
-const followStatus = computed(() => {
+const followStatusText = computed(() => {
   if (user.value?.followed) return 'Unfollow'
   else return 'Follow'
 })
+const followStatusIcon = {
+  Follow: IconFollow,
+  Unfollow: IconUnfollow
+}
 
 const response = await axios.get<User>(`/api/users/${props.username}/profile`)
 user.value = response.data
@@ -70,16 +76,17 @@ onBeforeRouteUpdate(async (to, from) => {
               :class="[user?.followed ? 'hover:bg-rose-600 hover:text-white' : 'hover:bg-gray-200']"
               class="ml-auto self-center flex items-center gap-x-4 px-4 py-2 bg-gray-100 rounded-lg"
             >
-              <span class="hidden sm:inline-block">{{ followStatus }}</span>
+              <span class="hidden sm:inline-block">{{ followStatusText }}</span>
+              <component class="h-4 w-4" :is="followStatusIcon[followStatusText]"></component>
             </button>
           </div>
         </div>
-        <div class="space-y-2 px-4 py-4">
+        <div class="space-y-2 px-4 py-4 overflow-hidden">
           <div>
-            <p class="text-2xl font-bold sm:text-start">{{ user?.name }}</p>
-            <p class="font-bold sm:text-start">@{{ user?.username }}</p>
+            <p class="text-2xl font-bold sm:text-start truncate">{{ user?.name }}</p>
+            <p class="font-bold sm:text-start truncate">@{{ user?.username }}</p>
           </div>
-          <p class="sm:text-start">
+          <p class="sm:text-start truncate">
             {{ user?.bio }}
           </p>
           <div class="flex items-center gap-x-4">
