@@ -10,6 +10,7 @@ import IconDelete from '@/components/icons/Delete.vue'
 import IconMore from '@/components/icons/More.vue'
 import IconHeart from '@/components/icons/Heart.vue'
 import ArticleCommentSection from '@/components/ArticleCommentSection.vue'
+import AppLink from '@/components/AppLink.vue'
 
 const props = defineProps<{ slug: string }>()
 const router = useRouter()
@@ -67,22 +68,23 @@ onUnmounted(() => {
       <div class="space-y-4">
         <h1 class="sm:text-4xl text-2xl font-bold">{{ article?.title }}</h1>
         <div class="flex items-center justify-between gap-x-4">
-          <div class="flex items-center gap-x-4 flex-wrap">
+          <div class="flex items-center gap-x-4 gap-y-2.5 flex-wrap">
             <span>Tags: </span>
-            <div
-              class="font-bold px-2 py-1 bg-gray-200 rounded-lg text-sm"
+            <RouterLink
+              :to="{ name: 'SearchTags', query: { query: tag } }"
+              class="font-bold px-2 py-1 bg-gray-200 hover:bg-green-500 hover:text-white rounded-lg text-sm"
               v-for="(tag, index) in article?.tags"
               :key="index"
             >
               {{ tag }}
-            </div>
+            </RouterLink>
           </div>
           <div class="flex items-center gap-x-4 shrink-0">
             <span>{{ formatDate(article!.createdAt) }}</span>
           </div>
         </div>
         <div class="flex items-center justify-between w-full gap-x-8 flex-nowrap">
-          <RouterLink
+          <AppLink
             :to="{ name: 'Profile', params: { username: article?.author.username } }"
             class="flex items-center gap-x-4 overflow-hidden"
           >
@@ -93,7 +95,7 @@ onUnmounted(() => {
                 <span>@{{ article?.author.username }}</span>
               </div>
             </div>
-          </RouterLink>
+          </AppLink>
           <div class="flex items-center justify-end gap-x-2">
             <button
               @click="toggleFavourite"
@@ -114,13 +116,13 @@ onUnmounted(() => {
                 <IconMore class="w-6 h-6 text-black"></IconMore>
               </button>
               <div v-if="isMenuOpened" class="absolute right-0 top-0 shadow-lg bg-white">
-                <RouterLink
+                <AppLink
                   class="px-8 py-4 flex items-center justify-between gap-x-2 hover:bg-gray-200"
                   :to="{ name: 'EditArticle', params: { slug: article?.slug } }"
                 >
                   <span>Edit</span>
                   <IconEdit class="w-5 h-5"></IconEdit>
-                </RouterLink>
+                </AppLink>
 
                 <button
                   @click="deleteArticle"

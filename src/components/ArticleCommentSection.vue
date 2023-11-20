@@ -3,6 +3,7 @@ import { ref, watch, nextTick } from 'vue'
 import { useUserStore } from '@/stores/user.store'
 import { AddCommentSchema, type Comment, type AddComment } from '@/schemas/article'
 import CommentBox from './CommentBox.vue'
+import AppLink from './AppLink.vue'
 import axios from 'axios'
 import type { ZodFormattedError } from 'zod'
 
@@ -87,13 +88,13 @@ async function deleteComment(id: string, index: number) {
       </form>
     </div>
     <div class="mt-8" v-else>
-      <RouterLink class="text-green-500 hover:text-green-600" :to="{ name: 'Signup' }">
+      <AppLink class="text-green-500 hover:text-green-600" :to="{ name: 'Signup' }">
         Sign up
-      </RouterLink>
+      </AppLink>
       and
-      <RouterLink class="text-green-500 hover:text-green-600" :to="{ name: 'Login' }">
+      <AppLink class="text-green-500 hover:text-green-600" :to="{ name: 'Login' }">
         Log in
-      </RouterLink>
+      </AppLink>
       first before add comment to this article.
     </div>
     <div class="mt-8">

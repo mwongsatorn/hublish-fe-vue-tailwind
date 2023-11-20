@@ -7,6 +7,7 @@ import { onBeforeRouteUpdate, useRouter } from 'vue-router'
 import IconWrite from '@/components/icons/Write.vue'
 import IconFollow from '@/components/icons/Follow.vue'
 import IconUnfollow from '@/components/icons/Unfollow.vue'
+import AppLink from '@/components/AppLink.vue'
 
 const user = ref<User | null>(null)
 const userStore = useUserStore()
@@ -61,14 +62,14 @@ onBeforeRouteUpdate(async (to, from) => {
           />
 
           <div class="ml-auto">
-            <RouterLink
+            <AppLink
               v-if="userStore.user?.id === user?.id"
               :to="{ name: 'CreateArticle' }"
               class="px-4 py-2 flex items-center gap-x-2 bg-gray-100 hover:bg-gray-200 rounded-lg"
             >
               <span class="hidden sm:inline-block">Write article</span>
               <IconWrite class="sm:w-6 sm:h-6 w-4 h-4"></IconWrite>
-            </RouterLink>
+            </AppLink>
 
             <button
               @click="followHandler"
@@ -90,37 +91,47 @@ onBeforeRouteUpdate(async (to, from) => {
             {{ user?.bio }}
           </p>
           <div class="flex items-center gap-x-4">
-            <RouterLink
+            <AppLink
               class="hover:underline hover:font-bold"
               :to="{ name: 'UserFollowers', params: { username: user?.username } }"
             >
               followers: {{ user?.followerCount }}
-            </RouterLink>
+            </AppLink>
 
-            <RouterLink
+            <AppLink
               class="hover:underline hover:font-bold"
               :to="{ name: 'UserFollowings', params: { username: user?.username } }"
             >
               followings: {{ user?.followingCount }}
-            </RouterLink>
+            </AppLink>
           </div>
         </div>
         <div class="flex items-center bg-gray-100">
-          <RouterLink :to="{ name: 'UserFeed' }" class="py-4 w-full text-center hover:bg-gray-200">
+          <AppLink
+            v-if="userStore.user?.username === user?.username"
+            :to="{ name: 'UserFeed' }"
+            active-class="bg-green-500 text-white font-bold"
+            inactive-class="hover:bg-gray-200"
+            class="py-4 w-full text-center"
+          >
             Feed
-          </RouterLink>
-          <RouterLink
+          </AppLink>
+          <AppLink
             :to="{ name: 'UserArticles' }"
-            class="py-4 w-full text-center hover:bg-gray-200"
+            active-class="bg-green-500 text-white font-bold"
+            inactive-class="hover:bg-gray-200"
+            class="py-4 w-full text-center"
           >
             Articles
-          </RouterLink>
-          <RouterLink
+          </AppLink>
+          <AppLink
             :to="{ name: 'UserFavouriteArticles' }"
-            class="py-4 w-full text-center hover:bg-gray-200"
+            active-class="bg-green-500 text-white font-bold"
+            inactive-class="hover:bg-gray-200"
+            class="py-4 w-full text-center"
           >
-            Favourite
-          </RouterLink>
+            Favourites
+          </AppLink>
         </div>
       </section>
       <section class="py-12">

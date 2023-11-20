@@ -6,6 +6,7 @@ import axios from 'axios'
 import { useUserStore } from '@/stores/user.store'
 import IconFollow from '@/components/icons/Follow.vue'
 import IconUnfollow from '@/components/icons/Unfollow.vue'
+import AppLink from './AppLink.vue'
 
 const props = defineProps<{ user: ShortUser }>()
 const userStore = useUserStore()
@@ -36,7 +37,7 @@ async function followHandler() {
 </script>
 
 <template>
-  <RouterLink
+  <AppLink
     :to="{ name: 'Profile', params: { username: user.username } }"
     class="flex items-start gap-x-6 px-4 py-2"
   >
@@ -57,5 +58,5 @@ async function followHandler() {
       <span class="hidden sm:inline-block">{{ followStatusText }}</span>
       <component class="h-4 w-4" :is="followStatusIcon[followStatusText]"></component>
     </button>
-  </RouterLink>
+  </AppLink>
 </template>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { type Comment } from '@/schemas/article'
 import IconDelete from './icons/Delete.vue'
+import AppLink from './AppLink.vue'
 import { useUserStore } from '@/stores/user.store'
 import { formatDate } from '@/helpers/formatDate'
 
@@ -17,7 +18,7 @@ const userStore = useUserStore()
 
 <template>
   <div class="relative p-4 flex gap-x-4 border-2 [&_+_div]:border-t-0">
-    <RouterLink
+    <AppLink
       class="w-12 h-12 rounded-full shrink-0"
       :to="{
         name: 'Profile',
@@ -25,11 +26,11 @@ const userStore = useUserStore()
       }"
     >
       <img :src="props.comment.commentAuthor.image" />
-    </RouterLink>
+    </AppLink>
 
     <div class="w-full overflow-hidden">
       <div class="sm:text-sm text-xs gap-x-4 flex">
-        <RouterLink
+        <AppLink
           class="basis-[75%] overflow-hidden block"
           :to="{
             name: 'Profile',
@@ -40,7 +41,7 @@ const userStore = useUserStore()
             {{ props.comment.commentAuthor.name }}
           </div>
           <div class="truncate">@{{ props.comment.commentAuthor.username }}</div>
-        </RouterLink>
+        </AppLink>
 
         <div class="basis-[25%] min-w-[60px] text-end">
           {{ formatDate(props.comment.createdAt) }}

@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user.store'
 import IconChevronDown from '@/components/icons/ChevronDown.vue'
 import IconSearch from '@/components/icons/Search.vue'
 import IconCross from '@/components/icons/Cross.vue'
+import AppLink from './AppLink.vue'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -42,9 +43,9 @@ onUnmounted(() => {
   <header class="shadow-lg">
     <div class="max-w-7xl mx-auto flex items-center h-[56px] px-4">
       <div class="flex items-center gap-x-4 w-full sm:w-fit">
-        <RouterLink :class="[isSearchBarOpened ? 'hidden sm:block' : '']" to="/">
+        <AppLink :class="[isSearchBarOpened ? 'hidden sm:block' : '']" to="/">
           <span class="font-bold text-xl uppercase">Hublish</span>
-        </RouterLink>
+        </AppLink>
         <form
           @submit.prevent="search"
           :class="[isSearchBarOpened ? 'flex basis-full' : 'hidden sm:flex w-[275px]']"
@@ -78,8 +79,8 @@ onUnmounted(() => {
         :class="[isSearchBarOpened ? 'hidden' : 'flex']"
         class="ml-auto shrink-0 items-center gap-x-4"
       >
-        <RouterLink class="hover:text-green-500" to="/login"> Log in </RouterLink>
-        <RouterLink class="hover:text-green-500" to="/signup"> Sign up </RouterLink>
+        <AppLink class="hover:text-green-500" to="/login"> Log in </AppLink>
+        <AppLink class="hover:text-green-500" to="/signup"> Sign up </AppLink>
       </div>
 
       <div
@@ -98,24 +99,31 @@ onUnmounted(() => {
         <div
           v-show="isMenuOpened"
           ref="menu"
-          class="w-full min-w-[200px] bg-white absolute top-[140%] right-0 p-2"
+          class="w-full min-w-[200px] bg-white shadow-lg absolute top-[140%] right-0"
         >
-          <RouterLink
-            class="px-4 py-2 block text-center hover:bg-gray-200"
+          <AppLink
+            active-class="bg-green-500 font-bold text-white"
+            inactive-class="hover:bg-gray-200"
+            class="px-4 py-2 block text-center"
             :to="{ name: 'Profile', params: { username: userStore.user?.username } }"
           >
             Profile
-          </RouterLink>
-          <RouterLink class="px-4 py-2 block text-center hover:bg-gray-200" :to="`/settings`">
+          </AppLink>
+          <AppLink
+            active-class="bg-green-500 font-bold text-white"
+            inactive-class="hover:bg-gray-200"
+            class="px-4 py-2 block text-center"
+            :to="`/settings`"
+          >
             Settings
-          </RouterLink>
-          <RouterLink
+          </AppLink>
+          <AppLink
             @click="userStore.logOut"
             class="px-4 py-2 block text-center hover:bg-gray-200"
             to="/"
           >
             Log out
-          </RouterLink>
+          </AppLink>
         </div>
       </div>
     </div>
