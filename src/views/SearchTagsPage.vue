@@ -2,7 +2,7 @@
 import type { Article } from '@/schemas/article'
 import axios from 'axios'
 import { ref } from 'vue'
-import { onBeforeRouteUpdate, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 import ArticlePreview from '@/components/ArticlePreview.vue'
 
 const searchArticles = ref<Article[] | []>([])
@@ -12,13 +12,6 @@ if (route.query.query !== '') {
   const response = await axios.get('/api/articles', { params: { tags: route.query.query } })
   searchArticles.value = response.data
 }
-
-onBeforeRouteUpdate(async (to) => {
-  if (route.query.query !== to.query.query && to.query.query !== '') {
-    const response = await axios.get('/api/articles', { params: { tags: to.query.query } })
-    searchArticles.value = response.data
-  }
-})
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { onBeforeRouteUpdate, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 import axios from 'axios'
 import type { ShortUser } from '@/schemas/user'
 import UserPreview from '@/components/UserPreview.vue'
@@ -12,13 +12,6 @@ if (route.query.query !== '') {
   const response = await axios.get('/api/users', { params: { query: route.query.query } })
   searchPeople.value = response.data
 }
-
-onBeforeRouteUpdate(async (to) => {
-  if (route.query.query !== to.query.query && to.query.query !== '') {
-    const response = await axios.get('/api/articles', { params: { query: to.query.query } })
-    searchPeople.value = response.data
-  }
-})
 </script>
 
 <template>
