@@ -56,7 +56,7 @@ const router = createRouter({
           props: true
         },
         {
-          path: 'favourite',
+          path: 'favourites',
           component: () => import('@/views/UserFavouriteArticlesPage.vue'),
           name: 'UserFavouriteArticles',
           props: true
@@ -138,8 +138,14 @@ const router = createRouter({
       ]
     }
   ],
-  scrollBehavior(to, from, savedPosition) {
-    return { top: 0 }
+  scrollBehavior(to, from) {
+    if (from.params.username && to.params.username && from.params.username === to.params.username)
+      return
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({ left: 0, top: 0 })
+      }, 300)
+    })
   }
 })
 
