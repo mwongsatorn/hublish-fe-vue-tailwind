@@ -3,11 +3,12 @@ import { computed, ref } from 'vue'
 import axios from 'axios'
 import { type User } from '@/schemas/user'
 import { useUserStore } from '@/stores/user.store'
-import { onBeforeRouteUpdate, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import IconWrite from '@/components/icons/Write.vue'
 import IconFollow from '@/components/icons/Follow.vue'
 import IconUnfollow from '@/components/icons/Unfollow.vue'
 import AppLink from '@/components/AppLink.vue'
+import TransitionFade from '@/components/TransitionFade.vue'
 
 const user = ref<User | null>(null)
 const userStore = useUserStore()
@@ -40,13 +41,6 @@ async function followHandler() {
     user.value!.followerCount++
   }
 }
-
-onBeforeRouteUpdate(async (to, from) => {
-  if (to.params.username !== from.params.username) {
-    const response = await axios.get<User>(`/api/users/${to.params.username}/profile`)
-    user.value = response.data
-  }
-})
 </script>
 
 <template>
@@ -93,14 +87,14 @@ onBeforeRouteUpdate(async (to, from) => {
           <div class="flex items-center gap-x-4">
             <AppLink
               class="hover:underline hover:font-bold"
-              :to="{ name: 'UserFollowers', params: { username: user?.username } }"
+              :to="{ name: 'UserFollowers', params: { username: props.username } }"
             >
               followers: {{ user?.followerCount }}
             </AppLink>
 
             <AppLink
               class="hover:underline hover:font-bold"
-              :to="{ name: 'UserFollowings', params: { username: user?.username } }"
+              :to="{ name: 'UserFollowings', params: { username: props.username } }"
             >
               followings: {{ user?.followingCount }}
             </AppLink>
@@ -109,7 +103,7 @@ onBeforeRouteUpdate(async (to, from) => {
         <div class="flex items-center bg-gray-100">
           <AppLink
             v-if="userStore.user?.username === user?.username"
-            :to="{ name: 'UserFeed' }"
+            :to="{ name: 'UserFeed', params: { username: props.username } }"
             active-class="bg-green-500 text-white font-bold"
             inactive-class="hover:bg-gray-200"
             class="py-4 w-full text-center"
@@ -117,7 +111,7 @@ onBeforeRouteUpdate(async (to, from) => {
             Feed
           </AppLink>
           <AppLink
-            :to="{ name: 'UserArticles' }"
+            :to="{ name: 'UserArticles', params: { username: props.username } }"
             active-class="bg-green-500 text-white font-bold"
             inactive-class="hover:bg-gray-200"
             class="py-4 w-full text-center"
@@ -125,7 +119,7 @@ onBeforeRouteUpdate(async (to, from) => {
             Articles
           </AppLink>
           <AppLink
-            :to="{ name: 'UserFavouriteArticles' }"
+            :to="{ name: 'UserFavouriteArticles', params: { username: props.username } }"
             active-class="bg-green-500 text-white font-bold"
             inactive-class="hover:bg-gray-200"
             class="py-4 w-full text-center"
@@ -135,7 +129,17 @@ onBeforeRouteUpdate(async (to, from) => {
         </div>
       </section>
       <section class="py-12">
-        <RouterView></RouterView>
+        <RouterView v-slot="{ Component }">
+          <template v-if="Component">
+            <TransitionFade>
+              <KeepAlive :max="3">
+                <Suspense>
+                  <component :is="Component"></component>
+                </Suspense>
+              </KeepAlive>
+            </TransitionFade>
+          </template>
+        </RouterView>
       </section>
     </div>
   </main>
