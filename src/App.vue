@@ -6,11 +6,11 @@ import TransitionFade from './components/TransitionFade.vue'
 
 <template>
   <AppHeader></AppHeader>
-  <RouterView v-slot="{ Component }">
+  <RouterView v-slot="{ Component, route }">
     <template v-if="Component">
       <TransitionFade>
         <Suspense>
-          <component :is="Component"></component>
+          <component :is="Component" :key="route.params.username"></component>
         </Suspense>
       </TransitionFade>
     </template>
