@@ -47,7 +47,17 @@ const router = createRouter({
           path: 'feed',
           component: () => import('@/views/UserFeedPage.vue'),
           name: 'UserFeed',
-          props: true
+          props: true,
+          beforeEnter: (to) => {
+            const userStore = useUserStore()
+            if (userStore.user?.username !== to.params.username)
+              return {
+                name: 'UserArticles',
+                params: {
+                  username: to.params.username
+                }
+              }
+          }
         },
         {
           path: 'articles',
