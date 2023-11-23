@@ -8,7 +8,7 @@ const latestArticles = ref<Article[] | null>(null)
 
 const response = await axios.get(`/api/articles`)
 
-latestArticles.value = response.data
+latestArticles.value = response.data.results
 </script>
 
 <template>

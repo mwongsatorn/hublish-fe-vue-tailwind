@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Article } from '@/schemas/article'
+import type { Article, PageResult } from '@/types/index'
 import axios from 'axios'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
@@ -9,8 +9,10 @@ const searchArticles = ref<Article[] | []>([])
 const route = useRoute()
 
 if (route.query.query !== '') {
-  const response = await axios.get('/api/articles', { params: { tags: route.query.query } })
-  searchArticles.value = response.data
+  const response = await axios.get<PageResult<Article>>('/api/articles', {
+    params: { tags: route.query.query }
+  })
+  searchArticles.value = response.data.results
 }
 </script>
 
