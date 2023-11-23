@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user.store'
 import { useRouter } from 'vue-router'
-import { type Article } from '@/schemas/article'
+import { type Article } from '@/types/index'
 import IconHeart from '@/components/icons/Heart.vue'
 import AppLink from './AppLink.vue'
 import axios from 'axios'

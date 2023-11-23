@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import axios from 'axios'
-import { type User } from '@/schemas/user'
+import { type User } from '@/types/index'
 import { useUserStore } from '@/stores/user.store'
 import { useRouter } from 'vue-router'
 import IconWrite from '@/components/icons/Write.vue'

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import axios from 'axios'
 import { ref } from 'vue'
-import { type Article } from '@/schemas/article'
+import { type Article } from '@/types/index'
 import ArticlePreview from '@/components/ArticlePreview.vue'
 
 const latestArticles = ref<Article[] | null>(null)

@@ -28,21 +28,6 @@ export const LogInSchema = z.object({
   password: z.string().nonempty({ message: 'Password is required' })
 })
 
-export type User = z.infer<typeof UserSchema>
-export type ShortUser = Omit<User, 'accessToken' | 'email' | 'followerCount' | 'followingCount'>
-export const UserSchema = z.object({
-  id: z.string(),
-  email: z.string(),
-  username: z.string(),
-  name: z.string(),
-  bio: z.string(),
-  image: z.string(),
-  accessToken: z.string().optional(),
-  followerCount: z.number(),
-  followingCount: z.number(),
-  followed: z.boolean().optional()
-})
-
 export type ChangeEmail = z.infer<typeof ChangeEmailSchema>
 export const ChangeEmailSchema = z.object({
   password: z.string().nonempty({ message: 'This field can not be empty' }),

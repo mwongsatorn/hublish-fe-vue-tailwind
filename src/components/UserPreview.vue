@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import type { ShortUser } from '@/schemas/user'
+import type { ShortUser } from '@/types/index'
 import axios from 'axios'
 import { useUserStore } from '@/stores/user.store'
 import IconFollow from '@/components/icons/Follow.vue'

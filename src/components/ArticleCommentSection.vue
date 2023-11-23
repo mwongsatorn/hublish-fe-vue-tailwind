@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue'
 import { useUserStore } from '@/stores/user.store'
-import { AddCommentSchema, type Comment, type AddComment } from '@/schemas/article'
+import { AddCommentSchema, type AddComment } from '@/schemas/article'
+import type { Comment } from '@/types/index'
 import CommentBox from './CommentBox.vue'
 import AppLink from './AppLink.vue'
 import axios from 'axios'
@@ -16,11 +17,8 @@ const commentInputError = ref<ZodFormattedError<AddComment> | null>()
 const commentInput = ref<HTMLElement | null>(null)
 const isFocused = ref(false)
 
-const endpoint = `/api/articles/${props.slug}/comments`
-const response = await axios.get<Comment[]>(endpoint)
-if (response.status === 200) {
-  articleComments.value = response.data
-}
+const response = await axios.get<Comment[]>(`/api/articles/${props.slug}/comments`)
+articleComments.value = response.data
 
 watch(comment, () => {
   if (commentInputError.value) commentInputError.value = null

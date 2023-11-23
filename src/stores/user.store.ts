@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import { type User } from '@/schemas/user'
+import { type User } from '@/types/index'
 
 interface UserState {
   user: User | null

@@ -2,10 +2,9 @@
 import { ref } from 'vue'
 import { useRouter, onBeforeRouteUpdate } from 'vue-router'
 import { useUserStore } from '@/stores/user.store'
-import { z } from 'zod'
 import axios from 'axios'
 import ArticlePreview from '@/components/ArticlePreview.vue'
-import { ArticleSchema, type Article } from '@/schemas/article'
+import { type Article } from '@/types/index'
 
 const props = defineProps<{ username: string }>()
 
@@ -15,12 +14,7 @@ const userStore = useUserStore()
 
 const feedArticles = ref<Article[] | null>(null)
 const response = await axios.get('/api/articles/feed')
-if (response.status === 200) {
-  const validateRes = z.array(ArticleSchema).safeParse(response.data)
-  if (!validateRes.success) throw 'Error'
-
-  feedArticles.value = validateRes.data
-}
+feedArticles.value = response.data
 
 onBeforeRouteUpdate((to) => {
   if (userStore.user?.username !== to.params.username) {

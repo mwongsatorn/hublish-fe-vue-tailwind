@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Comment } from '@/schemas/article'
+import { type Comment } from '@/types/index'
 import IconDelete from './icons/Delete.vue'
 import AppLink from './AppLink.vue'
 import { useUserStore } from '@/stores/user.store'
