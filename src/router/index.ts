@@ -13,7 +13,15 @@ const router = createRouter({
     {
       path: '/login',
       name: 'Login',
-      component: () => import('@/views/LoginPage.vue')
+      component: () => import('@/views/LoginPage.vue'),
+      beforeEnter: () => {
+        const userStore = useUserStore()
+        if (userStore.isLoggedIn) {
+          return {
+            name: 'Home'
+          }
+        }
+      }
     },
     {
       path: '/signup',
