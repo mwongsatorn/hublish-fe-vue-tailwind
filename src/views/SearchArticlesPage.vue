@@ -4,6 +4,7 @@ import axios from 'axios'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import ArticlePreview from '@/components/ArticlePreview.vue'
+import PreviewContainer from '@/components/PreviewContainer.vue'
 import PaginationController from '@/components/PaginationController.vue'
 
 const searchArticles = ref<Article[] | []>([])
@@ -28,10 +29,14 @@ if (route.query.query !== '') {
 </script>
 
 <template>
-  <div v-if="searchArticles.length > 0" class="mt-8">
-    <ArticlePreview :article="article" v-for="article in searchArticles" :key="article.id">
-    </ArticlePreview>
-    <PaginationController :total_pages="totalPages" />
+  <div>
+    <template v-if="searchArticles.length > 0">
+      <PreviewContainer>
+        <ArticlePreview :article="article" v-for="article in searchArticles" :key="article.id">
+        </ArticlePreview>
+      </PreviewContainer>
+      <PaginationController :total_pages="totalPages" />
+    </template>
+    <p class="px-4 mt-8" v-else>No result found. Make sure all the words spell correctly.</p>
   </div>
-  <p class="px-4 mt-8" v-else>No result found. Make sure all the words spell correctly.</p>
 </template>

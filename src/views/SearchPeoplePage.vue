@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import axios from 'axios'
 import type { ShortUser, PageResult } from '@/types/index'
 import UserPreview from '@/components/UserPreview.vue'
+import PreviewContainer from '@/components/PreviewContainer.vue'
 import PaginationController from '@/components/PaginationController.vue'
 
 const searchPeople = ref<ShortUser[] | []>([])
@@ -26,9 +27,13 @@ if (route.query.query !== '') {
 </script>
 
 <template>
-  <div v-if="searchPeople.length > 0" class="mt-8">
-    <UserPreview :user="user" v-for="user in searchPeople" :key="user.id"></UserPreview>
-    <PaginationController :total_pages="totalPages" />
+  <div>
+    <template v-if="searchPeople.length > 0">
+      <PreviewContainer>
+        <UserPreview :user="user" v-for="user in searchPeople" :key="user.id"></UserPreview>
+      </PreviewContainer>
+      <PaginationController :total_pages="totalPages" />
+    </template>
+    <p class="px-4 mt-8" v-else>No result found. Make sure all the words spell correctly.</p>
   </div>
-  <p class="px-4 mt-8" v-else>No result found. Make sure all the words spell correctly.</p>
 </template>

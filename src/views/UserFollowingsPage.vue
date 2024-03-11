@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { type ShortUser } from '@/schemas/user'
+import { type ShortUser } from '@/types'
 import axios from 'axios'
 import UserPreview from '@/components/UserPreview.vue'
+import PreviewContainer from '@/components/PreviewContainer.vue'
 
 const props = defineProps<{ username: string }>()
 
@@ -13,6 +14,8 @@ followings.value = response.data
 
 <template>
   <section class="mx-auto max-w-7xl">
-    <UserPreview v-for="user in followings" :user="user" :key="user.id"></UserPreview>
+    <PreviewContainer>
+      <UserPreview v-for="user in followings" :user="user" :key="user.id"></UserPreview>
+    </PreviewContainer>
   </section>
 </template>

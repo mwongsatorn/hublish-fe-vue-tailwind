@@ -4,9 +4,8 @@ import { useRouter, onBeforeRouteUpdate } from 'vue-router'
 import { useUserStore } from '@/stores/user.store'
 import axios from 'axios'
 import ArticlePreview from '@/components/ArticlePreview.vue'
+import PreviewContainer from '@/components/PreviewContainer.vue'
 import { type Article } from '@/types/index'
-
-const props = defineProps<{ username: string }>()
 
 const router = useRouter()
 
@@ -18,14 +17,14 @@ feedArticles.value = response.data
 
 onBeforeRouteUpdate((to) => {
   if (userStore.user?.username !== to.params.username) {
-    router.replace({ name: 'UserArticles', params: { username: to.params.username } })
+    router.replace({ name: 'UserArticless', params: { username: to.params.username } })
   }
 })
 </script>
 
 <template>
-  <div class="space-y-4">
+  <PreviewContainer>
     <ArticlePreview :article="article" v-for="(article, index) in feedArticles" :key="index">
     </ArticlePreview>
-  </div>
+  </PreviewContainer>
 </template>

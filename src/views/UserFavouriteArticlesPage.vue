@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import ArticlePreview from '@/components/ArticlePreview.vue'
+import PreviewContainer from '@/components/PreviewContainer.vue'
 import { type Article } from '@/types/index'
 
 const props = defineProps<{ username: string }>()
@@ -13,12 +14,12 @@ userFavouriteArticles.value = response.data
 </script>
 
 <template>
-  <div class="space-y-4">
+  <PreviewContainer>
     <ArticlePreview
       :article="article"
       v-for="(article, index) in userFavouriteArticles"
       :key="index"
     >
     </ArticlePreview>
-  </div>
+  </PreviewContainer>
 </template>
