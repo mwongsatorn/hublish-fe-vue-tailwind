@@ -13,9 +13,18 @@ const articles = ref<Article[] | null>(null)
 const totalPages = ref(0)
 const page = parseInt(route.query.page as string) || 1
 
-const response = await axios.get<PageResult<Article>>(`/api/articles/${props.username}/created`, {
-  params: { page: page }
-})
+const endpoint = {
+  UserCreatedArticles: `/api/articles/${props.username}/created`,
+  UserFavouriteArticles: `/api/articles/${props.username}/favourite`,
+  UserFeedArticles: '/api/articles/feed'
+} as const
+
+const response = await axios.get<PageResult<Article>>(
+  endpoint[route.name as keyof typeof endpoint],
+  {
+    params: { page: page }
+  }
+)
 articles.value = response.data.results
 totalPages.value = response.data.total_pages
 </script>

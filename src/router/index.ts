@@ -37,14 +37,14 @@ const router = createRouter({
         const userStore = useUserStore()
         if (userStore.user?.username !== to.params.username)
           return {
-            name: 'UserArticles',
+            name: 'UserCreatedArticles',
             params: {
               username: to.params.username
             }
           }
         else
           return {
-            name: 'UserFeed',
+            name: 'UserFeedArticles',
             params: {
               username: to.params.username
             }
@@ -53,29 +53,18 @@ const router = createRouter({
       children: [
         {
           path: 'feed',
-          component: () => import('@/views/UserFeedPage.vue'),
-          name: 'UserFeed',
-          props: true,
-          beforeEnter: (to) => {
-            const userStore = useUserStore()
-            if (userStore.user?.username !== to.params.username)
-              return {
-                name: 'UserArticles',
-                params: {
-                  username: to.params.username
-                }
-              }
-          }
+          component: () => import('@/views/UserArticlesPage.vue'),
+          name: 'UserFeedArticles'
         },
         {
           path: 'articles',
           component: () => import('@/views/UserArticlesPage.vue'),
-          name: 'UserArticles',
+          name: 'UserCreatedArticles',
           props: true
         },
         {
           path: 'favourites',
-          component: () => import('@/views/UserFavouriteArticlesPage.vue'),
+          component: () => import('@/views/UserArticlesPage.vue'),
           name: 'UserFavouriteArticles',
           props: true
         }

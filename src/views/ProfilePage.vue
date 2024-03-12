@@ -43,6 +43,7 @@ async function followHandler() {
     user.value!.followerCount++
   }
 }
+
 </script>
 
 <template>
@@ -105,7 +106,7 @@ async function followHandler() {
         <div class="flex items-center bg-gray-100">
           <AppLink
             v-if="userStore.user?.username === user?.username"
-            :to="{ name: 'UserFeed', params: { username: props.username } }"
+            :to="{ name: 'UserFeedArticles', params: { username: props.username } }"
             active-class="bg-green-500 text-white font-bold"
             inactive-class="hover:bg-gray-200"
             class="py-4 w-full text-center"
@@ -113,7 +114,7 @@ async function followHandler() {
             Feed
           </AppLink>
           <AppLink
-            :to="{ name: 'UserArticles', params: { username: props.username } }"
+            :to="{ name: 'UserCreatedArticles', params: { username: props.username } }"
             active-class="bg-green-500 text-white font-bold"
             inactive-class="hover:bg-gray-200"
             class="py-4 w-full text-center"
