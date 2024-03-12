@@ -1,25 +1,31 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import axios from 'axios'
 import ArticlePreview from '@/components/ArticlePreview.vue'
 import PreviewContainer from '@/components/PreviewContainer.vue'
-import { type Article } from '@/types/index'
+import PaginationController from '@/components/PaginationController.vue'
+import type { Article, PageResult } from '@/types/index'
 
 const props = defineProps<{ username: string }>()
+const route = useRoute()
+const articles = ref<Article[] | null>(null)
+const totalPages = ref(0)
+const page = parseInt(route.query.page as string) || 1
 
-const userFavouriteArticles = ref<Article[] | null>(null)
-const response = await axios.get(`/api/articles/${props.username}/favourite`)
-
-userFavouriteArticles.value = response.data
+const response = await axios.get<PageResult<Article>>(`/api/articles/${props.username}/favourite`, {
+  params: { page: page }
+})
+articles.value = response.data.results
+totalPages.value = response.data.total_pages
 </script>
 
 <template>
-  <PreviewContainer>
-    <ArticlePreview
-      :article="article"
-      v-for="(article, index) in userFavouriteArticles"
-      :key="index"
-    >
-    </ArticlePreview>
-  </PreviewContainer>
+  <div>
+    <PreviewContainer>
+      <ArticlePreview :article="article" v-for="(article, index) in articles" :key="index">
+      </ArticlePreview>
+    </PreviewContainer>
+    <PaginationController :total_pages="totalPages"></PaginationController>
+  </div>
 </template>

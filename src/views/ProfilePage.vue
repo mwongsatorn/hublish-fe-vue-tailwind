@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import axios from 'axios'
 import { type User } from '@/types/index'
 import { useUserStore } from '@/stores/user.store'
@@ -12,6 +13,7 @@ import TransitionFade from '@/components/TransitionFade.vue'
 
 const user = ref<User | null>(null)
 const userStore = useUserStore()
+const route = useRoute()
 const router = useRouter()
 
 const props = defineProps<{ username: string }>()
@@ -128,13 +130,13 @@ async function followHandler() {
           </AppLink>
         </div>
       </section>
-      <section class="py-12">
+      <section class="py-8">
         <RouterView v-slot="{ Component }">
           <template v-if="Component">
             <TransitionFade>
               <KeepAlive :max="3">
                 <Suspense>
-                  <component :is="Component"></component>
+                  <component :is="Component" :key="route.fullPath"></component>
                 </Suspense>
               </KeepAlive>
             </TransitionFade>

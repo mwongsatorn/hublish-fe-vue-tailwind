@@ -1,30 +1,30 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter, onBeforeRouteUpdate } from 'vue-router'
-import { useUserStore } from '@/stores/user.store'
+import { useRoute } from 'vue-router'
 import axios from 'axios'
 import ArticlePreview from '@/components/ArticlePreview.vue'
 import PreviewContainer from '@/components/PreviewContainer.vue'
-import { type Article } from '@/types/index'
+import PaginationController from '@/components/PaginationController.vue'
+import type { Article, PageResult } from '@/types/index'
 
-const router = useRouter()
+const articles = ref<Article[] | null>(null)
+const route = useRoute()
+const totalPages = ref(0)
+const page = parseInt(route.query.page as string) || 1
 
-const userStore = useUserStore()
-
-const feedArticles = ref<Article[] | null>(null)
-const response = await axios.get('/api/articles/feed')
-feedArticles.value = response.data
-
-onBeforeRouteUpdate((to) => {
-  if (userStore.user?.username !== to.params.username) {
-    router.replace({ name: 'UserArticless', params: { username: to.params.username } })
-  }
+const response = await axios.get<PageResult<Article>>(`/api/articles/feed`, {
+  params: { page: page }
 })
+articles.value = response.data.results
+totalPages.value = response.data.total_pages
 </script>
 
 <template>
-  <PreviewContainer>
-    <ArticlePreview :article="article" v-for="(article, index) in feedArticles" :key="index">
-    </ArticlePreview>
-  </PreviewContainer>
+  <div>
+    <PreviewContainer>
+      <ArticlePreview :article="article" v-for="(article, index) in articles" :key="index">
+      </ArticlePreview>
+    </PreviewContainer>
+    <PaginationController :total_pages="totalPages"></PaginationController>
+  </div>
 </template>
