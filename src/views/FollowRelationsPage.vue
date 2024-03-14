@@ -1,13 +1,15 @@
 <script setup lang="ts">
+import { useRoute } from 'vue-router'
 import AppLink from '@/components/AppLink.vue'
 import TransitionFade from '@/components/TransitionFade.vue'
 
 const props = defineProps<{ username: string }>()
+const route = useRoute()
 </script>
 
 <template>
-  <main>
-    <section class="mx-auto max-w-7xl">
+  <main class="bg-gray-100 h-[calc(100vh-56px)]">
+    <section class="mx-auto max-w-7xl bg-white h-full">
       <div class="flex items-center">
         <AppLink
           active-class="bg-green-500 text-white font-bold"
@@ -26,14 +28,13 @@ const props = defineProps<{ username: string }>()
           Followings
         </AppLink>
       </div>
-    </section>
-    <section class="py-4">
+
       <RouterView v-slot="{ Component }">
         <template v-if="Component">
           <TransitionFade>
             <KeepAlive>
               <Suspense>
-                <component :is="Component"></component>
+                <component :is="Component" :key="route.fullPath"></component>
               </Suspense>
             </KeepAlive>
           </TransitionFade>

@@ -79,13 +79,13 @@ const router = createRouter({
         {
           path: 'followings',
           name: 'UserFollowings',
-          component: () => import('@/views/UserFollowingsPage.vue'),
+          component: () => import('@/views/FollowRelationsNestedPage.vue'),
           props: true
         },
         {
           path: 'followers',
           name: 'UserFollowers',
-          component: () => import('@/views/UserFollowersPage.vue'),
+          component: () => import('@/views/FollowRelationsNestedPage.vue'),
           props: true
         }
       ]
