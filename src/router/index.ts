@@ -130,17 +130,17 @@ const router = createRouter({
         {
           path: 'articles',
           name: 'SearchArticles',
-          component: () => import('@/views/SearchArticlesPage.vue')
+          component: () => import('@/views/SearchNestedPage.vue')
         },
         {
           path: 'tags',
           name: 'SearchTags',
-          component: () => import('@/views/SearchTagsPage.vue')
+          component: () => import('@/views/SearchNestedPage.vue')
         },
         {
           path: 'people',
-          name: 'SearchPeople',
-          component: () => import('@/views/SearchPeoplePage.vue')
+          name: 'SearchUsers',
+          component: () => import('@/views/SearchNestedPage.vue')
         }
       ]
     }

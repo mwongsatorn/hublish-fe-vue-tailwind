@@ -15,7 +15,7 @@ const searchQuery = ref('')
 route.query.query && (await fetchFirstPages(route.query.query as string))
 
 async function fetchFirstPages(query: string) {
-  const [articlesFirstPageResponse, tagsFirstPageResponse, peopleFirstPageResponse] =
+  const [articlesFirstPageResponse, tagsFirstPageResponse, usersFirstPageResponse] =
     await Promise.all([
       axios.get<PageResult<Article>>('/api/articles', {
         params: { title: query }
@@ -30,11 +30,11 @@ async function fetchFirstPages(query: string) {
 
   sessionStorage.setItem('articlesFirstPage', JSON.stringify(articlesFirstPageResponse.data))
   sessionStorage.setItem('tagsFirstPage', JSON.stringify(tagsFirstPageResponse.data))
-  sessionStorage.setItem('peopleFirstPage', JSON.stringify(peopleFirstPageResponse.data))
+  sessionStorage.setItem('usersFirstPage', JSON.stringify(usersFirstPageResponse.data))
 
   articlesTotalResults.value = articlesFirstPageResponse.data.total_results
   tagsTotalResults.value = tagsFirstPageResponse.data.total_results
-  peopleTotalResults.value = peopleFirstPageResponse.data.total_results
+  peopleTotalResults.value = usersFirstPageResponse.data.total_results
 }
 
 onBeforeRouteUpdate(async (to, from) => {
@@ -58,8 +58,8 @@ watch(
 </script>
 
 <template>
-  <main>
-    <section class="mx-auto max-w-7xl py-12">
+  <div class="bg-gray-100">
+    <section class="mx-auto max-w-7xl py-8 bg-white min-h-[calc(100vh-56px)]">
       <h1 class="px-4 text-3xl font-bold">Your results for "{{ searchQuery }}"</h1>
       <div class="flex gap-x-4 px-4 mt-4">
         <AppLink
@@ -79,7 +79,7 @@ watch(
         <AppLink
           active-class="font-bold underline underline-offset-4 text-green-500"
           inactive-class="hover:text-green-500 font-bold"
-          :to="{ name: 'SearchPeople', query: { query: route.query.query } }"
+          :to="{ name: 'SearchUsers', query: { query: route.query.query } }"
         >
           People: {{ peopleTotalResults }}
         </AppLink>
@@ -95,5 +95,5 @@ watch(
         </template>
       </RouterView>
     </section>
-  </main>
+  </div>
 </template>
