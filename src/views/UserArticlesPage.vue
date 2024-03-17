@@ -30,11 +30,12 @@ totalPages.value = response.data.total_pages
 </script>
 
 <template>
-  <div>
+  <div v-if="articles?.length" class="space-y-4">
     <PreviewContainer>
       <ArticlePreview :article="article" v-for="(article, index) in articles" :key="index">
       </ArticlePreview>
     </PreviewContainer>
     <PaginationController :total_pages="totalPages"> </PaginationController>
   </div>
+  <p class="px-4 text-rose-800 font-bold" v-else>There is no article to display.</p>
 </template>
