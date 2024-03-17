@@ -20,7 +20,9 @@ users.value = response.data
 </script>
 
 <template>
-  <PreviewContainer>
-    <UserPreview v-for="user in users" :user="user" :key="user.id"></UserPreview>
-  </PreviewContainer>
+  <div class="py-8">
+    <PreviewContainer>
+      <UserPreview v-for="user in users" :user="user" :key="user.id"></UserPreview>
+    </PreviewContainer>
+  </div>
 </template>
