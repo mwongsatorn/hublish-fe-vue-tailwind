@@ -54,7 +54,8 @@ const router = createRouter({
         {
           path: 'feed',
           component: () => import('@/views/UserArticlesPage.vue'),
-          name: 'UserFeedArticles'
+          name: 'UserFeedArticles',
+          props: true
         },
         {
           path: 'articles',
