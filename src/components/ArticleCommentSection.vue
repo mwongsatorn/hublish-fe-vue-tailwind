@@ -52,11 +52,11 @@ async function deleteComment(id: string, index: number) {
 </script>
 
 <template>
-  <section class="max-w-2xl mx-auto px-4 my-12">
-    <h1 class="sm:text-4xl text-2xl font-bold">Comments</h1>
+  <section class="py-8">
+    <h1 class="px-4 text-3xl font-bold">Comments</h1>
     <div
       v-if="userStore.isLoggedIn"
-      class="w-full border-2 block px-4 py-4 mt-4"
+      class="border-2 block px-4 py-4 mt-4 mx-4"
       :class="[isFocused ? 'border-black' : '']"
     >
       <form @submit.prevent="postComment" class="block h-max">
@@ -78,14 +78,14 @@ async function deleteComment(id: string, index: number) {
           </p>
           <button
             type="submit"
-            class="text-white rounded-xl px-2 py-1.5 text-sm bg-green-500 ml-auto"
+            class="text-white rounded-xl px-4 py-2 text-sm bg-green-500 ml-auto"
           >
             Post
           </button>
         </div>
       </form>
     </div>
-    <div class="mt-8" v-else>
+    <div class="mt-8 px-4" v-else>
       <AppLink class="text-green-500 hover:text-green-600" :to="{ name: 'Signup' }">
         Sign up
       </AppLink>

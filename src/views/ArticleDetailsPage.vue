@@ -38,7 +38,7 @@ async function toggleFavourite() {
   if (!userStore.isLoggedIn) return router.push({ name: 'Login' })
   if (!article.value?.favourited) {
     const response = await axios.post(`/api/articles/${article.value?.slug}/favourite`)
-    if (response.status !== 200) return
+    if (response.status !== 201) return
     article.value!.favourited = true
     article.value!.favouriteCount++
   } else {
@@ -63,10 +63,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <main>
-    <section class="max-w-2xl mx-auto px-4 my-12">
+  <div class="bg-white divide-y-2 max-w-2xl mx-auto h-full">
+    <section class="px-4 py-8">
       <div class="space-y-4">
-        <h1 class="sm:text-4xl text-2xl font-bold">{{ article?.title }}</h1>
+        <h1 class="text-3xl font-bold">{{ article?.title }}</h1>
         <div class="flex items-center justify-between gap-x-4">
           <div class="flex items-center gap-x-4 gap-y-2.5 flex-wrap">
             <span>Tags: </span>
@@ -142,5 +142,5 @@ onUnmounted(() => {
     </section>
     <ArticleCommentSection :image="article?.author.image!" :slug="props.slug">
     </ArticleCommentSection>
-  </main>
+  </div>
 </template>
