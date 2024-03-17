@@ -12,6 +12,7 @@ import {
 } from '@/schemas/user'
 import { USER_IMAGES } from '@/constants/images'
 import axios from 'axios'
+import AppLink from '@/components/AppLink.vue'
 
 const userStore = useUserStore()
 
@@ -135,189 +136,187 @@ async function profileSubmit() {
 </script>
 
 <template>
-  <main>
-    <section class="max-w-7xl mx-auto px-4 py-12 min-h-[calc(100vh-56px)]">
-      <h1 class="font-bold text-2xl text-center">Settings</h1>
-      <div class="grid md:grid-cols-[40%_60%] grid-cols-1 gap-4">
-        <div>
-          <p>Profile image</p>
-          <div class="flex items-center gap-4 flex-wrap mt-4 overflow-y-auto max-h-[300px]">
-            <button
-              @click="choseImage = key"
-              v-for="(image, key) in USER_IMAGES"
-              class="basis-[calc(25%-1rem)] h-auto rounded-full"
-              :class="choseImage === key ? 'border-4 border-gray-800' : ''"
-              :key="key"
-            >
-              <img :src="image" alt="" />
-            </button>
-          </div>
-        </div>
-        <div>
-          <p class="mt-4 text-red-700 text-center" v-if="changeSettingsError">
-            {{ changeSettingsError }}
-          </p>
-          <div v-if="!changeEmail" class="mt-4">
-            <label for="email">Email</label>
-            <div class="flex mt-2">
-              <input
-                v-model="userStore.user!.email"
-                id="email"
-                class="block w-full border-2 border-r-0 px-4 py-1.5"
-                placeholder=""
-                disabled
-              />
-              <button @click="changeEmail = true" class="px-4 py-1.5 border-2">Edit</button>
-            </div>
-          </div>
-          <form @submit.prevent="emailSubmit" v-else>
-            <div class="mt-4">
-              <label for="new-email">New Email</label>
-              <input
-                v-model="emailForm.newEmail"
-                id="new-email"
-                class="block w-full mt-2 border-2 px-4 py-1.5"
-                placeholder="Enter your new email"
-                type="text"
-              />
-              <p class="text-red-700" v-if="emailFormError?.newEmail">
-                ** {{ emailFormError.newEmail._errors[0] }} **
-              </p>
-            </div>
-            <div class="mt-4">
-              <label for="password">Password</label>
-              <input
-                v-model="emailForm.password"
-                id="password"
-                class="block w-full mt-2 border-2 px-4 py-1.5"
-                placeholder="Enter your password"
-                type="password"
-              />
-              <p class="text-red-700" v-if="emailFormError?.password">
-                ** {{ emailFormError.password._errors[0] }} **
-              </p>
-            </div>
-            <div class="flex items-center justify-end gap-x-4">
-              <button type="submit" class="rounded-lg mt-8 block bg-green-500 px-4 py-2 text-white">
-                Submit
-              </button>
-              <button
-                @click="changeEmail = false"
-                type="reset"
-                class="rounded-lg mt-8 block bg-rose-500 px-4 py-2 text-white"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-          <div v-if="!changePassword" class="mt-4">
-            <label for="name">Password</label>
-            <div class="flex mt-2">
-              <input
-                v-model="passwordForm.currentPassword"
-                id="current-password"
-                class="block w-full border-2 border-r-0 px-4 py-1.5"
-                placeholder=""
-                type="password"
-                disabled
-              />
-              <button @click="changePassword = true" class="px-4 py-1.5 border-2">Edit</button>
-            </div>
-          </div>
-          <form @submit.prevent="passwordSubmit" v-else>
-            <div class="mt-4">
-              <label for="current-password">Current password</label>
-              <input
-                v-model="passwordForm.currentPassword"
-                id="current=password"
-                class="block w-full mt-2 border-2 px-4 py-1.5"
-                type="password"
-                placeholder="Enter your current password"
-              />
-              <p class="text-red-700" v-if="passwordFormError?.currentPassword">
-                ** {{ passwordFormError.currentPassword._errors[0] }} **
-              </p>
-            </div>
-            <div class="mt-4">
-              <label for="new-password">New password</label>
-              <input
-                v-model="passwordForm.newPassword"
-                class="block w-full mt-2 border-2 px-4 py-1.5"
-                type="password"
-                placeholder="Enter your new password"
-              />
-              <p class="text-red-700" v-if="passwordFormError?.newPassword">
-                ** {{ passwordFormError.newPassword._errors[0] }} **
-              </p>
-            </div>
-            <div class="mt-4">
-              <label for="confirm-password">Confirm password</label>
-              <input
-                v-model="passwordForm.confirmPassword"
-                class="block w-full mt-2 border-2 px-4 py-1.5"
-                type="password"
-                placeholder="Confirm your new password"
-              />
-              <p class="text-red-700" v-if="passwordFormError?.confirmPassword">
-                ** {{ passwordFormError.confirmPassword._errors[0] }} **
-              </p>
-            </div>
-            <div class="flex items-center justify-end gap-x-4">
-              <button type="submit" class="rounded-lg mt-8 block bg-green-500 px-4 py-2 text-white">
-                Submit
-              </button>
-              <button
-                @click="changePassword = false"
-                type="reset"
-                class="rounded-lg mt-8 block bg-rose-500 px-4 py-2 text-white"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-          <form @submit.prevent="profileSubmit" id="main-form">
-            <div class="mt-4">
-              <label for="name">Name</label>
-              <input
-                v-model="userStore.user!.name"
-                id="name"
-                class="block w-full mt-2 border-2 px-4 py-1.5"
-                placeholder="Name"
-                type="text"
-              />
-              <p class="text-red-700" v-if="profileFormError?.name">
-                ** {{ profileFormError.name._errors[0] }} **
-              </p>
-            </div>
-            <div class="mt-4">
-              <label for="bio">Bio</label>
-              <textarea
-                v-model="userStore.user!.bio"
-                id="bio"
-                class="block w-full h-24 mt-2 border-2 px-4 py-2 resize-none"
-                placeholder="Tell me more about yourself"
-              />
-              <p class="text-red-700" v-if="profileFormError?.bio">
-                ** {{ profileFormError.bio._errors[0] }} **
-              </p>
-            </div>
-            <div class="flex items-center justify-end gap-x-4">
-              <button
-                type="submit"
-                class="ml-auto rounded-lg mt-8 block bg-green-500 px-4 py-2 text-white"
-              >
-                Submit
-              </button>
-              <RouterLink
-                :to="{ name: 'Profile', params: { username: userStore.user!.username } }"
-                class="rounded-lg mt-8 block bg-rose-500 px-4 py-2 text-white"
-              >
-                Cancel
-              </RouterLink>
-            </div>
-          </form>
+  <div class="max-w-7xl mx-auto px-4 py-12 min-h-[calc(100vh-56px)] bg-white space-y-4">
+    <h1 class="font-bold text-3xl text-center">Settings</h1>
+    <div class="flex md:flex-row flex-col gap-4">
+      <div class="basis-[50%]">
+        <p>Profile image</p>
+        <div class="flex items-center gap-4 flex-wrap mt-4 overflow-y-auto max-h-[300px]">
+          <button
+            @click="choseImage = key"
+            v-for="(image, key) in USER_IMAGES"
+            class="basis-[calc(25%-1rem)] h-auto rounded-full"
+            :class="choseImage === key ? 'border-4 border-gray-800' : ''"
+            :key="key"
+          >
+            <img :src="image" alt="" />
+          </button>
         </div>
       </div>
-    </section>
-  </main>
+      <div class="basis-[50%] space-y-4">
+        <p class="text-red-700 text-center" v-if="changeSettingsError">
+          {{ changeSettingsError }}
+        </p>
+        <div v-if="!changeEmail" class="space-y-2">
+          <label for="email">Email</label>
+          <div class="flex">
+            <input
+              v-model="userStore.user!.email"
+              id="email"
+              class="block w-full border-2 border-r-0 px-4 py-1.5"
+              placeholder=""
+              disabled
+            />
+            <button @click="changeEmail = true" class="px-4 py-1.5 border-2">Edit</button>
+          </div>
+        </div>
+        <form class="space-y-4" @submit.prevent="emailSubmit" v-else>
+          <div class="space-y-2">
+            <label for="new-email">New Email</label>
+            <input
+              v-model="emailForm.newEmail"
+              id="new-email"
+              class="block w-full border-2 px-4 py-1.5"
+              placeholder="Enter your new email"
+              type="text"
+            />
+            <p class="text-red-700" v-if="emailFormError?.newEmail">
+              ** {{ emailFormError.newEmail._errors[0] }} **
+            </p>
+          </div>
+          <div class="space-y-2">
+            <label for="password">Password</label>
+            <input
+              v-model="emailForm.password"
+              id="password"
+              class="block w-full border-2 px-4 py-1.5"
+              placeholder="Enter your password"
+              type="password"
+            />
+            <p class="text-red-700" v-if="emailFormError?.password">
+              ** {{ emailFormError.password._errors[0] }} **
+            </p>
+          </div>
+          <div class="flex items-center justify-end gap-x-4">
+            <button type="submit" class="rounded-lg mt-8 block bg-green-500 px-4 py-2 text-white">
+              Submit
+            </button>
+            <button
+              @click="changeEmail = false"
+              type="reset"
+              class="rounded-lg mt-8 block bg-rose-500 px-4 py-2 text-white"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+        <div v-if="!changePassword" class="space-y-2">
+          <label for="name">Password</label>
+          <div class="flex">
+            <input
+              v-model="passwordForm.currentPassword"
+              id="current-password"
+              class="block w-full border-2 border-r-0 px-4 py-1.5"
+              placeholder=""
+              type="password"
+              disabled
+            />
+            <button @click="changePassword = true" class="px-4 py-1.5 border-2">Edit</button>
+          </div>
+        </div>
+        <form class="space-y-4" @submit.prevent="passwordSubmit" v-else>
+          <div class="space-y-2">
+            <label for="current-password">Current password</label>
+            <input
+              v-model="passwordForm.currentPassword"
+              id="current=password"
+              class="block w-full border-2 px-4 py-1.5"
+              type="password"
+              placeholder="Enter your current password"
+            />
+            <p class="text-red-700" v-if="passwordFormError?.currentPassword">
+              ** {{ passwordFormError.currentPassword._errors[0] }} **
+            </p>
+          </div>
+          <div class="space-y-2">
+            <label for="new-password">New password</label>
+            <input
+              v-model="passwordForm.newPassword"
+              class="block w-full border-2 px-4 py-1.5"
+              type="password"
+              placeholder="Enter your new password"
+            />
+            <p class="text-red-700" v-if="passwordFormError?.newPassword">
+              ** {{ passwordFormError.newPassword._errors[0] }} **
+            </p>
+          </div>
+          <div class="space-y-2">
+            <label for="confirm-password">Confirm password</label>
+            <input
+              v-model="passwordForm.confirmPassword"
+              class="block w-full border-2 px-4 py-1.5"
+              type="password"
+              placeholder="Confirm your new password"
+            />
+            <p class="text-red-700" v-if="passwordFormError?.confirmPassword">
+              ** {{ passwordFormError.confirmPassword._errors[0] }} **
+            </p>
+          </div>
+          <div class="flex items-center justify-end gap-x-4">
+            <button type="submit" class="rounded-lg mt-8 block bg-green-500 px-4 py-2 text-white">
+              Submit
+            </button>
+            <button
+              @click="changePassword = false"
+              type="reset"
+              class="rounded-lg mt-8 block bg-rose-500 px-4 py-2 text-white"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+        <form class="space-y-4" @submit.prevent="profileSubmit" id="main-form">
+          <div class="space-y-2">
+            <label for="name">Name</label>
+            <input
+              v-model="userStore.user!.name"
+              id="name"
+              class="block w-full border-2 px-4 py-1.5"
+              placeholder="Name"
+              type="text"
+            />
+            <p class="text-red-700" v-if="profileFormError?.name">
+              ** {{ profileFormError.name._errors[0] }} **
+            </p>
+          </div>
+          <div class="space-y-2">
+            <label for="bio">Bio</label>
+            <textarea
+              v-model="userStore.user!.bio"
+              id="bio"
+              class="block w-full h-24 border-2 px-4 py-2 resize-none"
+              placeholder="Tell me more about yourself"
+            />
+            <p class="text-red-700" v-if="profileFormError?.bio">
+              ** {{ profileFormError.bio._errors[0] }} **
+            </p>
+          </div>
+          <div class="flex items-center justify-end gap-x-4">
+            <button
+              type="submit"
+              class="ml-auto rounded-lg mt-8 block bg-green-500 px-4 py-2 text-white"
+            >
+              Submit
+            </button>
+            <AppLink
+              :to="{ name: 'Profile', params: { username: userStore.user!.username } }"
+              class="rounded-lg mt-8 block bg-rose-500 px-4 py-2 text-white"
+            >
+              Cancel
+            </AppLink>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </template>
