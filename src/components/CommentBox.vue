@@ -17,7 +17,7 @@ const userStore = useUserStore()
 </script>
 
 <template>
-  <div class="relative p-4 flex gap-x-4 border-2 [&_+_div]:border-t-0">
+  <div class="relative p-4 flex gap-x-4 border-y-2 [&_+_div]:border-t-0">
     <AppLink
       class="w-12 h-12 rounded-full shrink-0"
       :to="{
