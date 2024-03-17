@@ -40,7 +40,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <header class="shadow-lg">
+  <header class="sticky top-0 bg-white shadow-lg z-[9999]">
     <div class="max-w-7xl mx-auto flex items-center h-[56px] px-4">
       <div class="flex items-center gap-x-4 w-full sm:w-fit">
         <AppLink :class="[isSearchBarOpened ? 'hidden sm:block' : '']" to="/">
