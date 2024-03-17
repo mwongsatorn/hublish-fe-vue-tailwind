@@ -4,6 +4,7 @@ import { useUserStore } from '@/stores/user.store'
 import { useRouter } from 'vue-router'
 import { type Article } from '@/types/index'
 import IconHeart from '@/components/icons/Heart.vue'
+import IconImage from '@/components/icons/Image.vue'
 import AppLink from './AppLink.vue'
 import axios from 'axios'
 
@@ -21,7 +22,7 @@ async function toggleFavourite() {
   if (!userStore.isLoggedIn) return router.push({ name: 'Login' })
   if (!isFavourited.value) {
     const response = await axios.post(`/api/articles/${props.article.slug}/favourite`)
-    if (response.status !== 200) return
+    if (response.status !== 201) return
     isFavourited.value = !isFavourited.value
     favCount.value++
   } else {
@@ -34,8 +35,8 @@ async function toggleFavourite() {
 </script>
 
 <template>
-  <div class="grid grid-cols-1 sm:grid-cols-[calc(60%-0.5rem)_calc(40%-0.5rem)] px-4 py-2 gap-4">
-    <div class="">
+  <div class="grid grid-cols-1 md:grid-cols-[calc(57%-0.5rem)_calc(43%-0.5rem)] px-4 py-4 gap-4">
+    <div class="space-y-4">
       <div class="flex items-center justify-between gap-x-4">
         <AppLink
           :to="{ name: 'Profile', params: { username: props.article.author.username } }"
@@ -58,7 +59,7 @@ async function toggleFavourite() {
           <IconHeart class="h-6 w-6 text-white"></IconHeart>
         </button>
       </div>
-      <div class="space-y-4 mt-4">
+      <div class="space-y-4">
         <p class="text-3xl font-bold">{{ props.article.title }}</p>
         <div class="flex items-center gap-x-4">
           <span>Tags: </span>
@@ -71,7 +72,7 @@ async function toggleFavourite() {
             {{ tag }}
           </AppLink>
         </div>
-        <p class="line-clamp-2">{{ props.article.content }}</p>
+        <p class="whitespace-pre-wrap line-clamp-2">{{ props.article.content }}</p>
 
         <AppLink
           class="bg-gray-200 hover:bg-green-500 hover:text-white rounded-lg px-4 py-2 block w-fit"
@@ -81,6 +82,10 @@ async function toggleFavourite() {
         </AppLink>
       </div>
     </div>
-    <div class="bg-green-500 min-h-[250px] order-first sm:order-none"></div>
+    <div
+      class="bg-gray-400 opacity-75 min-h-[250px] order-first md:order-none flex items-center justify-center"
+    >
+      <IconImage class="size-20 text-white"></IconImage>
+    </div>
   </div>
 </template>
