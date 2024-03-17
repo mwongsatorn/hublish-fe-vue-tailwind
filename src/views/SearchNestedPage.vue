@@ -54,19 +54,19 @@ if (route.query.query !== '') {
   }
 }
 
-function getProp(item: any) {
-  if (routeName === 'SearchUsers') return { user: item }
-  return { article: item }
+function getProp(item: Article | ShortUser) {
+  if ('favourited' in item) return { article: item }
+  return { user: item }
 }
 </script>
 
 <template>
-  <div class="py-4">
+  <div class="space-y-4">
     <template v-if="searchItems.length > 0">
       <PreviewContainer>
         <component
           :is="info[routeName].component"
-          v-bind="getProp(item) as any"
+          v-bind="getProp(item)"
           v-for="item in searchItems"
           :key="item.id"
         >

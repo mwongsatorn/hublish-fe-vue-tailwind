@@ -58,42 +58,40 @@ watch(
 </script>
 
 <template>
-  <div class="bg-gray-100">
-    <section class="mx-auto max-w-7xl py-8 bg-white min-h-[calc(100vh-56px)]">
-      <h1 class="px-4 text-3xl font-bold">Your results for "{{ searchQuery }}"</h1>
-      <div class="flex gap-x-4 px-4 mt-4">
-        <AppLink
-          active-class="font-bold underline underline-offset-4 text-green-500"
-          inactive-class="hover:text-green-500 font-bold"
-          :to="{ name: 'SearchArticles', query: { query: route.query.query } }"
-        >
-          Articles: {{ articlesTotalResults }}
-        </AppLink>
-        <AppLink
-          active-class="font-bold underline underline-offset-4 text-green-500"
-          inactive-class="hover:text-green-500 font-bold"
-          :to="{ name: 'SearchTags', query: { query: route.query.query } }"
-        >
-          Tags: {{ tagsTotalResults }}
-        </AppLink>
-        <AppLink
-          active-class="font-bold underline underline-offset-4 text-green-500"
-          inactive-class="hover:text-green-500 font-bold"
-          :to="{ name: 'SearchUsers', query: { query: route.query.query } }"
-        >
-          People: {{ peopleTotalResults }}
-        </AppLink>
-      </div>
+  <div class="bg-white min-h-[calc(100vh-56px)] mx-auto max-w-7xl py-8 space-y-4">
+    <h1 class="px-4 text-3xl font-bold">Your results for "{{ searchQuery }}"</h1>
+    <div class="flex gap-x-4 px-4 mt-4">
+      <AppLink
+        active-class="font-bold underline underline-offset-4 text-green-500"
+        inactive-class="hover:text-green-500 font-bold"
+        :to="{ name: 'SearchArticles', query: { query: route.query.query } }"
+      >
+        Articles: {{ articlesTotalResults }}
+      </AppLink>
+      <AppLink
+        active-class="font-bold underline underline-offset-4 text-green-500"
+        inactive-class="hover:text-green-500 font-bold"
+        :to="{ name: 'SearchTags', query: { query: route.query.query } }"
+      >
+        Tags: {{ tagsTotalResults }}
+      </AppLink>
+      <AppLink
+        active-class="font-bold underline underline-offset-4 text-green-500"
+        inactive-class="hover:text-green-500 font-bold"
+        :to="{ name: 'SearchUsers', query: { query: route.query.query } }"
+      >
+        People: {{ peopleTotalResults }}
+      </AppLink>
+    </div>
 
-      <RouterView v-slot="{ Component, route }">
-        <template v-if="Component">
-          <TransitionFade>
-            <Suspense>
-              <component :is="Component" :key="route.fullPath"> </component>
-            </Suspense>
-          </TransitionFade>
-        </template>
-      </RouterView>
-    </section>
+    <RouterView v-slot="{ Component, route }">
+      <template v-if="Component">
+        <TransitionFade>
+          <Suspense>
+            <component :is="Component" :key="route.fullPath"> </component>
+          </Suspense>
+        </TransitionFade>
+      </template>
+    </RouterView>
   </div>
 </template>
