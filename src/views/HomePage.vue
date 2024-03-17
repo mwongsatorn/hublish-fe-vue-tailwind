@@ -13,22 +13,32 @@ latestArticles.value = response.data.results
 </script>
 
 <template>
-  <main>
-    <section class="px-4 py-36 text-white space-y-4 bg-green-400">
-      <div class="mx-auto max-w-7xl">
-        <div class="font-bold text-5xl uppercase px-4">Lorem ipsum dolor sit amet consectetur</div>
-        <div class="w-1/2 px-4">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum totam minima quod maiores
-          eos saepe adipisci molestiae tenetur maxime nulla!
+  <div>
+    <section class="relative py-36 text-white bg-[url('/paper-background.jpg')] bg-cover">
+      <div
+        class="absolute top-0 left-0 size-full bg-gradient-to-r from-green-900/65 to-green-400/65"
+      ></div>
+      <div class="relative w-full bg-gray-900/50 backdrop-blur-sm py-16">
+        <div class="mx-auto max-w-7xl">
+          <div class="w-full space-y-4 px-4">
+            <div
+              class="font-black text-center text-[clamp(2.5rem,_8vw,_5rem)] text-balance leading-[1] uppercase"
+            >
+              Discover the world through text
+            </div>
+            <div class="text-[clamp(1.25rem,4vw,_2.5rem)] text-center">
+              Explore diverse stories and perspectives on our platform.
+            </div>
+          </div>
         </div>
       </div>
     </section>
-    <section class="max-w-7xl mx-auto py-12 space-y-4">
-      <h1 class="px-4 sm:text-4xl text-2xl font-bold">Latest articles</h1>
+    <section class="max-w-7xl mx-auto py-8 space-y-4 bg-white">
+      <h1 class="px-4 text-3xl font-bold">Latest Articles</h1>
       <PreviewContainer>
         <ArticlePreview :article="article" v-for="article in latestArticles" :key="article.id">
         </ArticlePreview>
       </PreviewContainer>
     </section>
-  </main>
+  </div>
 </template>
