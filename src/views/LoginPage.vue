@@ -32,7 +32,10 @@ async function loginSubmit() {
 }
 
 watch(loginForm.value, () => {
-  formError.value = null
+  if (!formError.value || !loginError.value) {
+    formError.value = null
+    loginError.value = ''
+  }
 })
 </script>
 
