@@ -136,16 +136,16 @@ async function profileSubmit() {
 </script>
 
 <template>
-  <div class="max-w-7xl mx-auto px-4 py-12 min-h-[calc(100vh-56px)] bg-white space-y-4">
-    <h1 class="font-bold text-3xl text-center">Settings</h1>
-    <div class="flex md:flex-row flex-col gap-4">
+  <div class="mx-auto min-h-[calc(100vh-56px)] max-w-7xl space-y-4 bg-white px-4 py-12">
+    <h1 class="text-center text-3xl font-bold">Settings</h1>
+    <div class="flex flex-col gap-4 md:flex-row">
       <div class="basis-[50%]">
         <p>Profile image</p>
-        <div class="flex items-center gap-4 flex-wrap mt-4 overflow-y-auto max-h-[300px]">
+        <div class="mt-4 flex max-h-[300px] flex-wrap items-center gap-4 overflow-y-auto">
           <button
             @click="choseImage = key"
             v-for="(image, key) in USER_IMAGES"
-            class="basis-[calc(25%-1rem)] h-auto rounded-full"
+            class="h-auto basis-[calc(25%-1rem)] rounded-full"
             :class="choseImage === key ? 'border-4 border-gray-800' : ''"
             :key="key"
           >
@@ -154,7 +154,7 @@ async function profileSubmit() {
         </div>
       </div>
       <div class="basis-[50%] space-y-4">
-        <p class="text-red-700 text-center" v-if="changeSettingsError">
+        <p class="text-center text-red-700" v-if="changeSettingsError">
           {{ changeSettingsError }}
         </p>
         <div v-if="!changeEmail" class="space-y-2">
@@ -167,7 +167,7 @@ async function profileSubmit() {
               placeholder=""
               disabled
             />
-            <button @click="changeEmail = true" class="px-4 py-1.5 border-2">Edit</button>
+            <button @click="changeEmail = true" class="border-2 px-4 py-1.5">Edit</button>
           </div>
         </div>
         <form class="space-y-4" @submit.prevent="emailSubmit" v-else>
@@ -198,13 +198,13 @@ async function profileSubmit() {
             </p>
           </div>
           <div class="flex items-center justify-end gap-x-4">
-            <button type="submit" class="rounded-lg mt-8 block bg-green-500 px-4 py-2 text-white">
+            <button type="submit" class="mt-8 block rounded-lg bg-green-500 px-4 py-2 text-white">
               Submit
             </button>
             <button
               @click="changeEmail = false"
               type="reset"
-              class="rounded-lg mt-8 block bg-rose-500 px-4 py-2 text-white"
+              class="mt-8 block rounded-lg bg-rose-500 px-4 py-2 text-white"
             >
               Cancel
             </button>
@@ -221,7 +221,7 @@ async function profileSubmit() {
               type="password"
               disabled
             />
-            <button @click="changePassword = true" class="px-4 py-1.5 border-2">Edit</button>
+            <button @click="changePassword = true" class="border-2 px-4 py-1.5">Edit</button>
           </div>
         </div>
         <form class="space-y-4" @submit.prevent="passwordSubmit" v-else>
@@ -263,13 +263,13 @@ async function profileSubmit() {
             </p>
           </div>
           <div class="flex items-center justify-end gap-x-4">
-            <button type="submit" class="rounded-lg mt-8 block bg-green-500 px-4 py-2 text-white">
+            <button type="submit" class="mt-8 block rounded-lg bg-green-500 px-4 py-2 text-white">
               Submit
             </button>
             <button
               @click="changePassword = false"
               type="reset"
-              class="rounded-lg mt-8 block bg-rose-500 px-4 py-2 text-white"
+              class="mt-8 block rounded-lg bg-rose-500 px-4 py-2 text-white"
             >
               Cancel
             </button>
@@ -294,7 +294,7 @@ async function profileSubmit() {
             <textarea
               v-model="userStore.user!.bio"
               id="bio"
-              class="block w-full h-24 border-2 px-4 py-2 resize-none"
+              class="block h-24 w-full resize-none border-2 px-4 py-2"
               placeholder="Tell me more about yourself"
             />
             <p class="text-red-700" v-if="profileFormError?.bio">
@@ -304,13 +304,13 @@ async function profileSubmit() {
           <div class="flex items-center justify-end gap-x-4">
             <button
               type="submit"
-              class="ml-auto rounded-lg mt-8 block bg-green-500 px-4 py-2 text-white"
+              class="ml-auto mt-8 block rounded-lg bg-green-500 px-4 py-2 text-white"
             >
               Submit
             </button>
             <AppLink
               :to="{ name: 'Profile', params: { username: userStore.user!.username } }"
-              class="rounded-lg mt-8 block bg-rose-500 px-4 py-2 text-white"
+              class="mt-8 block rounded-lg bg-rose-500 px-4 py-2 text-white"
             >
               Cancel
             </AppLink>

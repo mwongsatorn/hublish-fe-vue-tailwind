@@ -40,38 +40,38 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <header class="sticky top-0 bg-white shadow-lg z-[9999]">
-    <div class="max-w-7xl mx-auto flex items-center h-[56px] px-4">
-      <div class="flex items-center gap-x-4 w-full sm:w-fit">
+  <header class="sticky top-0 z-[9999] bg-white shadow-lg">
+    <div class="mx-auto flex h-[56px] max-w-7xl items-center px-4">
+      <div class="flex w-full items-center gap-x-4 sm:w-fit">
         <AppLink :class="[isSearchBarOpened ? 'hidden sm:block' : '']" to="/">
-          <span class="font-bold text-xl uppercase">Hublish</span>
+          <span class="text-xl font-bold uppercase">Hublish</span>
         </AppLink>
         <form
           @submit.prevent="search"
-          :class="[isSearchBarOpened ? 'flex basis-full' : 'hidden sm:flex w-[275px]']"
+          :class="[isSearchBarOpened ? 'flex basis-full' : 'hidden w-[275px] sm:flex']"
           class=""
         >
           <button type="button" @click.prevent="isSearchBarOpened = false">
-            <IconCross class="w-6 h-6 text-black sm:hidden mr-2"></IconCross>
+            <IconCross class="mr-2 h-6 w-6 text-black sm:hidden"></IconCross>
           </button>
           <input
             v-model="searchQuery"
-            class="px-2 py-1.5 border-2 rounded-l-lg w-full"
+            class="w-full rounded-l-lg border-2 px-2 py-1.5"
             type="text"
           />
           <button
             type="submit"
-            class="self-stretch flex items-center px-2 rounded-r-lg bg-gray-200"
+            class="flex items-center self-stretch rounded-r-lg bg-gray-200 px-2"
           >
-            <IconSearch class="w-6 h-6"></IconSearch>
+            <IconSearch class="h-6 w-6"></IconSearch>
           </button>
         </form>
         <button
           @click="isSearchBarOpened = true"
-          :class="[isSearchBarOpened ? 'hidden' : 'sm:hidden block']"
-          class="px-2 py-2 rounded-full bg-gray-200"
+          :class="[isSearchBarOpened ? 'hidden' : 'block sm:hidden']"
+          class="rounded-full bg-gray-200 px-2 py-2"
         >
-          <IconSearch class="w-6 h-6"></IconSearch>
+          <IconSearch class="h-6 w-6"></IconSearch>
         </button>
       </div>
       <div
@@ -87,10 +87,10 @@ onUnmounted(() => {
         v-else
         @click.stop="isMenuOpened = !isMenuOpened"
         :class="[isSearchBarOpened ? 'hidden' : 'flex']"
-        class="ml-auto flex items-center gap-x-4 relative group cursor-pointer"
+        class="group relative ml-auto flex cursor-pointer items-center gap-x-4"
       >
-        <img :src="userStore.user?.image" class="h-10 w-10 rounded-full bg-gray-300 shrink-0" />
-        <div class="sm:block hidden">
+        <img :src="userStore.user?.image" class="h-10 w-10 shrink-0 rounded-full bg-gray-300" />
+        <div class="hidden sm:block">
           <span>{{ userStore.user?.username }}</span>
         </div>
         <div>
@@ -99,12 +99,12 @@ onUnmounted(() => {
         <div
           v-show="isMenuOpened"
           ref="menu"
-          class="w-full min-w-[200px] bg-white shadow-lg absolute top-[140%] right-0"
+          class="absolute right-0 top-[140%] w-full min-w-[200px] bg-white shadow-lg"
         >
           <AppLink
             active-class="bg-green-500 font-bold text-white"
             inactive-class="hover:bg-gray-200"
-            class="px-4 py-2 block text-center"
+            class="block px-4 py-2 text-center"
             :to="{ name: 'Profile', params: { username: userStore.user?.username } }"
           >
             Profile
@@ -112,14 +112,14 @@ onUnmounted(() => {
           <AppLink
             active-class="bg-green-500 font-bold text-white"
             inactive-class="hover:bg-gray-200"
-            class="px-4 py-2 block text-center"
+            class="block px-4 py-2 text-center"
             :to="`/settings`"
           >
             Settings
           </AppLink>
           <AppLink
             @click="userStore.logOut"
-            class="px-4 py-2 block text-center hover:bg-gray-200"
+            class="block px-4 py-2 text-center hover:bg-gray-200"
             to="/"
           >
             Log out

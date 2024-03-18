@@ -7,7 +7,7 @@ import TransitionFade from './components/TransitionFade.vue'
 
 <template>
   <AppHeader></AppHeader>
-  <main class="min-h-[calc(100vh-56px)]">
+  <main class="min-h-[calc(100vh-56px)] bg-gray-100">
     <RouterView v-slot="{ Component, route }">
       <template v-if="Component">
         <TransitionFade>

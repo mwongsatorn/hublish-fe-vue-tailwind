@@ -58,9 +58,9 @@ watch(
 </script>
 
 <template>
-  <div class="bg-white min-h-[calc(100vh-56px)] mx-auto max-w-7xl py-8 space-y-4">
+  <div class="mx-auto min-h-[calc(100vh-56px)] max-w-7xl space-y-4 bg-white py-8">
     <h1 class="px-4 text-3xl font-bold">Your results for "{{ searchQuery }}"</h1>
-    <div class="flex gap-x-4 px-4 mt-4">
+    <div class="mt-4 flex gap-x-4 px-4">
       <AppLink
         active-class="font-bold underline underline-offset-4 text-green-500"
         inactive-class="hover:text-green-500 font-bold"

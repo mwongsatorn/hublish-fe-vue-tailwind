@@ -42,9 +42,9 @@ async function createArticleSubmit() {
 </script>
 
 <template>
-  <div class="max-w-7xl mx-auto px-4 py-12 min-h-[calc(100vh-56px)] bg-white">
-    <h1 class="font-bold text-2xl text-center">Create Article</h1>
-    <p class="mt-4 text-red-700 text-center" v-if="createArticleError">
+  <div class="mx-auto min-h-[calc(100vh-56px)] max-w-7xl bg-white px-4 py-12">
+    <h1 class="text-center text-3xl font-bold">Create Article</h1>
+    <p class="mt-4 text-center text-red-700" v-if="createArticleError">
       {{ createArticleError }}
     </p>
     <form @submit.prevent="createArticleSubmit" class="space-y-4">
@@ -53,7 +53,7 @@ async function createArticleSubmit() {
         <input
           v-model="createArticleForm.title"
           id="article-title"
-          class="block w-full mt-2 border-2 px-4 py-1.5"
+          class="mt-2 block w-full border-2 px-4 py-1.5"
           type="text"
           placeholder="Title of your article"
         />
@@ -64,7 +64,7 @@ async function createArticleSubmit() {
         <textarea
           v-model="createArticleForm.content"
           id="article-content"
-          class="block w-full mt-2 border-2 px-4 py-1.5 h-[200px] resize-none"
+          class="mt-2 block h-[200px] w-full resize-none border-2 px-4 py-1.5"
           placeholder="Write your article here.."
         />
         <p class="text-red-700" v-if="formError?.content">
@@ -76,13 +76,13 @@ async function createArticleSubmit() {
         <input
           v-model="createArticleForm.tags"
           id="article-tags"
-          class="block w-full mt-2 border-2 px-4 py-1.5"
+          class="mt-2 block w-full border-2 px-4 py-1.5"
           type="text"
           placeholder="Seperate tags by white space or comma"
         />
         <p class="text-red-700" v-if="formError?.tags">** {{ formError.tags._errors[0] }} **</p>
       </div>
-      <button type="submit" class="ml-auto rounded-lg mt-8 block bg-green-500 px-4 py-2 text-white">
+      <button type="submit" class="ml-auto mt-8 block rounded-lg bg-green-500 px-4 py-2 text-white">
         Submit
       </button>
     </form>

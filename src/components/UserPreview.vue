@@ -39,15 +39,15 @@ async function followHandler() {
 <template>
   <div class="flex px-4 py-2">
     <AppLink
-      class="flex items-start grow gap-x-6"
+      class="flex grow items-start gap-x-6"
       :to="{ name: 'Profile', params: { username: user.username } }"
     >
       <div class="shrink-0">
-        <img class="sm:h-20 sm:w-20 h-16 w-16" :src="props.user.image" alt="" />
+        <img class="h-16 w-16 sm:h-20 sm:w-20" :src="props.user.image" alt="" />
       </div>
       <div class="overflow-hidden">
-        <p class="font-bold hover:underline truncate">{{ props.user.name }}</p>
-        <p class="text-gray-600 truncate">{{ props.user.username }}</p>
+        <p class="truncate font-bold hover:underline">{{ props.user.name }}</p>
+        <p class="truncate text-gray-600">{{ props.user.username }}</p>
         <p class="line-clamp-2">{{ props.user.bio }}</p>
       </div>
     </AppLink>
@@ -55,7 +55,7 @@ async function followHandler() {
       @click="followHandler"
       v-if="userStore.user?.username !== user.username"
       :class="[followed ? 'hover:bg-rose-600 hover:text-white' : 'hover:bg-gray-200']"
-      class="ml-auto self-center flex items-center gap-x-4 px-4 py-2 bg-gray-100 rounded-lg"
+      class="ml-auto flex items-center gap-x-4 self-center rounded-lg bg-gray-100 px-4 py-2"
     >
       <span class="hidden sm:inline-block">{{ followStatusText }}</span>
       <component class="h-4 w-4" :is="followStatusIcon[followStatusText]"></component>

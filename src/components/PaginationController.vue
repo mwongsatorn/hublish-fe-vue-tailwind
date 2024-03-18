@@ -18,7 +18,7 @@ const pageDisplay = (() => {
 })()
 
 function goToPage(page: number) {
-  router.push({ name: route.name as string, query: { query: route.query.query, page: page } })
+  router.push({ name: route.name as string, query: { ...route.query, page: page } })
 }
 
 function changeAdjacentSize() {
@@ -36,13 +36,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="flex items-center mt-8 px-4 justify-end gap-x-4">
+  <div v-if="props.total_pages" class="flex items-center justify-end gap-x-4 px-4">
     <div class="flex">
       <button
         @click="goToPage(1)"
         :disabled="currentPage === 1"
         :class="[currentPage === 1 ? 'bg-gray-500' : 'bg-green-600']"
-        class="h-8 w-8 flex items-center justify-center text-white border"
+        class="flex h-8 w-8 items-center justify-center border text-white"
       >
         &#60;&#60;
       </button>
@@ -50,7 +50,7 @@ onUnmounted(() => {
         @click="goToPage(currentPage - 1)"
         :disabled="currentPage === 1"
         :class="[currentPage === 1 ? 'bg-gray-500' : 'bg-green-600']"
-        class="h-8 w-8 flex items-center justify-center text-white border"
+        class="flex h-8 w-8 items-center justify-center border text-white"
       >
         &#60;
       </button>
@@ -69,7 +69,7 @@ onUnmounted(() => {
         @click="goToPage(currentPage + 1)"
         :disabled="currentPage === props.total_pages"
         :class="[currentPage === props.total_pages ? 'bg-gray-500' : 'bg-green-600']"
-        class="h-8 w-8 flex items-center justify-center text-white border"
+        class="flex h-8 w-8 items-center justify-center border text-white"
       >
         &#62;
       </button>
@@ -77,7 +77,7 @@ onUnmounted(() => {
         @click="goToPage(props.total_pages)"
         :disabled="currentPage === props.total_pages"
         :class="[currentPage === props.total_pages ? 'bg-gray-500' : 'bg-green-600']"
-        class="h-8 w-8 flex items-center justify-center text-white border"
+        class="flex h-8 w-8 items-center justify-center border text-white"
       >
         &#62;&#62;
       </button>

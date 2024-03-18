@@ -35,7 +35,7 @@ async function toggleFavourite() {
 </script>
 
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-[calc(57%-0.5rem)_calc(43%-0.5rem)] px-4 py-4 gap-4">
+  <div class="grid grid-cols-1 gap-4 px-4 py-4 md:grid-cols-[calc(57%-0.5rem)_calc(43%-0.5rem)]">
     <div class="space-y-4">
       <div class="flex items-center justify-between gap-x-4">
         <AppLink
@@ -44,14 +44,14 @@ async function toggleFavourite() {
         >
           <img :src="props.article.author.image" class="h-12 w-12 rounded-full bg-gray-200" />
           <div class="overflow-hidden">
-            <div class="font-bold truncate hover:underline">{{ props.article.author.name }}</div>
-            <div class="text-sm truncate">@{{ props.article.author.username }}</div>
+            <div class="truncate font-bold hover:underline">{{ props.article.author.name }}</div>
+            <div class="truncate text-sm">@{{ props.article.author.username }}</div>
           </div>
         </AppLink>
         <button
           @click="toggleFavourite"
           :class="[isFavourited ? 'bg-rose-500 text-white' : 'bg-gray-200']"
-          class="flex items-center gap-x-2 rounded-lg px-4 py-2 hover:bg-gray-400 hover:text-white transition-colors"
+          class="flex items-center gap-x-2 rounded-lg px-4 py-2 transition-colors hover:bg-gray-400 hover:text-white"
         >
           <span>
             {{ favCount }}
@@ -64,7 +64,7 @@ async function toggleFavourite() {
         <div class="flex items-center gap-x-4">
           <span>Tags: </span>
           <AppLink
-            class="font-bold px-2 py-1 bg-gray-200 hover:bg-green-500 hover:text-white rounded-lg text-sm"
+            class="rounded-lg bg-gray-200 px-2 py-1 text-sm font-bold hover:bg-green-500 hover:text-white"
             :to="{ name: 'SearchTags', query: { query: tag } }"
             v-for="(tag, index) in props.article.tags"
             :key="index"
@@ -72,10 +72,10 @@ async function toggleFavourite() {
             {{ tag }}
           </AppLink>
         </div>
-        <p class="whitespace-pre-wrap line-clamp-2">{{ props.article.content }}</p>
+        <p class="line-clamp-2 whitespace-pre-wrap">{{ props.article.content }}</p>
 
         <AppLink
-          class="bg-gray-200 hover:bg-green-500 hover:text-white rounded-lg px-4 py-2 block w-fit"
+          class="block w-fit rounded-lg bg-gray-200 px-4 py-2 hover:bg-green-500 hover:text-white"
           :to="{ name: 'ArticleDetails', params: { slug: props.article.slug } }"
         >
           Read more
@@ -83,7 +83,7 @@ async function toggleFavourite() {
       </div>
     </div>
     <div
-      class="bg-gray-400 opacity-75 min-h-[250px] order-first md:order-none flex items-center justify-center"
+      class="order-first flex min-h-[250px] items-center justify-center bg-gray-400 opacity-75 md:order-none"
     >
       <IconImage class="size-20 text-white"></IconImage>
     </div>

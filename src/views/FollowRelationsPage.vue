@@ -8,12 +8,12 @@ const route = useRoute()
 </script>
 
 <template>
-  <div class="mx-auto max-w-7xl bg-white min-h-[calc(100vh-56px)]">
+  <div class="mx-auto min-h-[calc(100vh-56px)] max-w-7xl bg-white">
     <div class="flex items-center">
       <AppLink
         active-class="bg-green-500 text-white font-bold"
         inactive-class="hover:bg-gray-200"
-        class="p-4 grow text-center bg-gray-100"
+        class="grow bg-gray-100 p-4 text-center"
         :to="{ name: 'UserFollowers', params: { username: props.username } }"
       >
         Followers
@@ -21,7 +21,7 @@ const route = useRoute()
       <AppLink
         active-class="bg-green-500 text-white font-bold"
         inactive-class="hover:bg-gray-200"
-        class="p-4 grow text-center bg-gray-100"
+        class="grow bg-gray-100 p-4 text-center"
         :to="{ name: 'UserFollowings', params: { username: props.username } }"
       >
         Followings

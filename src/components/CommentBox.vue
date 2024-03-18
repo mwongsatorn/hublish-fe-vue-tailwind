@@ -17,9 +17,9 @@ const userStore = useUserStore()
 </script>
 
 <template>
-  <div class="relative p-4 flex gap-x-4 border-y-2 [&_+_div]:border-t-0">
+  <div class="relative flex gap-x-4 border-y-2 p-4 [&_+_div]:border-t-0">
     <AppLink
-      class="w-12 h-12 rounded-full shrink-0"
+      class="h-12 w-12 shrink-0 rounded-full"
       :to="{
         name: 'Profile',
         params: { username: `${props.comment.commentAuthor.username}` }
@@ -29,25 +29,25 @@ const userStore = useUserStore()
     </AppLink>
 
     <div class="w-full overflow-hidden">
-      <div class="sm:text-sm text-xs gap-x-4 flex">
+      <div class="flex gap-x-4 text-xs sm:text-sm">
         <AppLink
-          class="basis-[75%] overflow-hidden block"
+          class="block basis-[75%] overflow-hidden"
           :to="{
             name: 'Profile',
             params: { username: `${props.comment.commentAuthor.username}` }
           }"
         >
-          <div class="font-bold hover:underline truncate">
+          <div class="truncate font-bold hover:underline">
             {{ props.comment.commentAuthor.name }}
           </div>
           <div class="truncate">@{{ props.comment.commentAuthor.username }}</div>
         </AppLink>
 
-        <div class="basis-[25%] min-w-[60px] text-end">
+        <div class="min-w-[60px] basis-[25%] text-end">
           {{ formatDate(props.comment.createdAt) }}
         </div>
       </div>
-      <p class="my-4 pr-4 text-sm sm:text-base whitespace-pre-wrap">
+      <p class="my-4 whitespace-pre-wrap pr-4 text-sm sm:text-base">
         {{ props.comment.body }}
       </p>
     </div>

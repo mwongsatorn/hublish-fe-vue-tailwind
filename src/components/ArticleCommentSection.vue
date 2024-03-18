@@ -56,7 +56,7 @@ async function deleteComment(id: string, index: number) {
     <h1 class="px-4 text-3xl font-bold">Comments</h1>
     <div
       v-if="userStore.isLoggedIn"
-      class="border-2 block px-4 py-4 mt-4 mx-4"
+      class="mx-4 mt-4 block border-2 px-4 py-4"
       :class="[isFocused ? 'border-black' : '']"
     >
       <form @submit.prevent="postComment" class="block h-max">
@@ -69,16 +69,16 @@ async function deleteComment(id: string, index: number) {
             @focus="isFocused = true"
             @blur="isFocused = false"
             placeholder="Write your comment here!"
-            class="overflow-hidden resize-none w-full px-2 inline-block whitespace-pre-wrap focus:outline-none"
+            class="inline-block w-full resize-none overflow-hidden whitespace-pre-wrap px-2 focus:outline-none"
           />
         </div>
-        <div class="flex mt-4">
+        <div class="mt-4 flex">
           <p class="text-red-700" v-if="commentInputError">
             ** {{ commentInputError._errors[0] }} **
           </p>
           <button
             type="submit"
-            class="text-white rounded-xl px-4 py-2 text-sm bg-green-500 ml-auto"
+            class="ml-auto rounded-xl bg-green-500 px-4 py-2 text-sm text-white"
           >
             Post
           </button>

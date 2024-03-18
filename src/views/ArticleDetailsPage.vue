@@ -63,34 +63,34 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="bg-white divide-y-2 max-w-2xl mx-auto h-full">
+  <div class="mx-auto min-h-[calc(100vh-56px)] max-w-2xl divide-y-2 bg-white">
     <section class="px-4 py-8">
       <div class="space-y-4">
         <h1 class="text-3xl font-bold">{{ article?.title }}</h1>
         <div class="flex items-center justify-between gap-x-4">
-          <div class="flex items-center gap-x-4 gap-y-2.5 flex-wrap">
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2.5">
             <span>Tags: </span>
             <RouterLink
               :to="{ name: 'SearchTags', query: { query: tag } }"
-              class="font-bold px-2 py-1 bg-gray-200 hover:bg-green-500 hover:text-white rounded-lg text-sm"
+              class="rounded-lg bg-gray-200 px-2 py-1 text-sm font-bold hover:bg-green-500 hover:text-white"
               v-for="(tag, index) in article?.tags"
               :key="index"
             >
               {{ tag }}
             </RouterLink>
           </div>
-          <div class="flex items-center gap-x-4 shrink-0">
+          <div class="flex shrink-0 items-center gap-x-4">
             <span>{{ formatDate(article!.createdAt) }}</span>
           </div>
         </div>
-        <div class="flex items-center justify-between w-full gap-x-8 flex-nowrap">
+        <div class="flex w-full flex-nowrap items-center justify-between gap-x-8">
           <AppLink
             :to="{ name: 'Profile', params: { username: article?.author.username } }"
             class="flex items-center gap-x-4 overflow-hidden"
           >
-            <img :src="article?.author.image" class="aspect-square sm:w-16 w-12 rounded-full" />
+            <img :src="article?.author.image" class="aspect-square w-12 rounded-full sm:w-16" />
             <div class="overflow-hidden">
-              <div class="truncate hover:underline font-bold">{{ article?.author.name }}</div>
+              <div class="truncate font-bold hover:underline">{{ article?.author.name }}</div>
               <div class="space-x-4 truncate text-sm">
                 <span>@{{ article?.author.username }}</span>
               </div>
@@ -100,7 +100,7 @@ onUnmounted(() => {
             <button
               @click="toggleFavourite"
               :class="[article?.favourited ? 'bg-rose-500 text-white' : 'bg-gray-200']"
-              class="flex items-center gap-x-2 rounded-lg px-4 py-2 hover:bg-gray-400 hover:text-white transition-colors"
+              class="flex items-center gap-x-2 rounded-lg px-4 py-2 transition-colors hover:bg-gray-400 hover:text-white"
             >
               <span>
                 {{ article?.favouriteCount }}
@@ -109,27 +109,27 @@ onUnmounted(() => {
             </button>
             <div
               ref="menu"
-              class="flex self-stretch relative"
+              class="relative flex self-stretch"
               v-if="userStore.user?.id === article?.author_id"
             >
               <button @click="isMenuOpened = true">
-                <IconMore class="w-6 h-6 text-black"></IconMore>
+                <IconMore class="h-6 w-6 text-black"></IconMore>
               </button>
-              <div v-if="isMenuOpened" class="absolute right-0 top-0 shadow-lg bg-white">
+              <div v-if="isMenuOpened" class="absolute right-0 top-0 bg-white shadow-lg">
                 <AppLink
-                  class="px-8 py-4 flex items-center justify-between gap-x-2 hover:bg-gray-200"
+                  class="flex items-center justify-between gap-x-2 px-8 py-4 hover:bg-gray-200"
                   :to="{ name: 'EditArticle', params: { slug: article?.slug } }"
                 >
                   <span>Edit</span>
-                  <IconEdit class="w-5 h-5"></IconEdit>
+                  <IconEdit class="h-5 w-5"></IconEdit>
                 </AppLink>
 
                 <button
                   @click="deleteArticle"
-                  class="px-8 py-4 flex items-center justify-between gap-x-2 hover:bg-rose-600 hover:text-white"
+                  class="flex items-center justify-between gap-x-2 px-8 py-4 hover:bg-rose-600 hover:text-white"
                 >
                   <span>Delete</span>
-                  <IconDelete class="w-5 h-5"></IconDelete>
+                  <IconDelete class="h-5 w-5"></IconDelete>
                 </button>
               </div>
             </div>

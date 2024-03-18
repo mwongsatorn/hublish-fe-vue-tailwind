@@ -3,10 +3,10 @@ import IconGithub from '@/components/icons/Github.vue'
 </script>
 
 <template>
-  <footer class="relative w-full border-t-2 mt-auto bg-gray-700">
-    <div class="mx-auto max-w-7xl px-4 py-4 flex items-center justify-center">
+  <footer class="relative mt-auto w-full border-t-2 bg-gray-700">
+    <div class="mx-auto flex max-w-7xl items-center justify-center px-4 py-4">
       <a
-        class="flex gap-x-4 font-bold text-xl text-white hover:underline-offset-2 hover:underline"
+        class="flex gap-x-4 text-xl font-bold text-white hover:underline hover:underline-offset-2"
         href="https://github.com/mwongsatorn/hublish"
       >
         View all codes on Github

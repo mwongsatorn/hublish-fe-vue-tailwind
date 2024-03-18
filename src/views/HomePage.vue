@@ -14,26 +14,26 @@ latestArticles.value = response.data.results
 
 <template>
   <div>
-    <section class="relative py-36 text-white bg-[url('/paper-background.jpg')] bg-cover">
+    <section class="relative bg-[url('/paper-background.jpg')] bg-cover py-36 text-white">
       <div
-        class="absolute top-0 left-0 size-full bg-gradient-to-r from-green-900/65 to-green-400/65"
+        class="absolute left-0 top-0 size-full bg-gradient-to-r from-green-900/65 to-green-400/65"
       ></div>
-      <div class="relative w-full bg-gray-900/50 backdrop-blur-sm py-16">
+      <div class="relative w-full bg-gray-900/50 py-16 backdrop-blur-sm">
         <div class="mx-auto max-w-7xl">
           <div class="w-full space-y-4 px-4">
             <div
-              class="font-black text-center text-[clamp(2.5rem,_8vw,_5rem)] text-balance leading-[1] uppercase"
+              class="text-balance text-center text-[clamp(2.5rem,_8vw,_5rem)] font-black uppercase leading-[1]"
             >
               Discover the world through text
             </div>
-            <div class="text-[clamp(1.25rem,4vw,_2.5rem)] text-center">
+            <div class="text-center text-[clamp(1.25rem,4vw,_2.5rem)]">
               Explore diverse stories and perspectives on our platform.
             </div>
           </div>
         </div>
       </div>
     </section>
-    <section class="max-w-7xl mx-auto py-8 space-y-4 bg-white">
+    <section class="mx-auto max-w-7xl space-y-4 bg-white py-8">
       <h1 class="px-4 text-3xl font-bold">Latest Articles</h1>
       <PreviewContainer>
         <ArticlePreview :article="article" v-for="article in latestArticles" :key="article.id">

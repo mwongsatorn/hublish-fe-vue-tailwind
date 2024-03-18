@@ -38,11 +38,11 @@ watch(loginForm.value, () => {
 
 <template>
   <div
-    class="max-w-7xl mx-auto w-full py-12 min-h-[calc(100vh-56px)] flex items-center justify-center"
+    class="mx-auto flex min-h-[calc(100vh-56px)] w-full max-w-7xl items-center justify-center py-12"
   >
-    <div class="max-w-md w-full py-12 px-4 shadow-lg border bg-white space-y-4">
-      <h1 class="font-bold text-3xl text-center">Log in</h1>
-      <p class="text-red-700 text-center" v-if="loginError">** {{ loginError }} **</p>
+    <div class="w-full max-w-md space-y-4 border bg-white px-4 py-12 shadow-lg">
+      <h1 class="text-center text-3xl font-bold">Log in</h1>
+      <p class="text-center text-red-700" v-if="loginError">** {{ loginError }} **</p>
       <form class="space-y-4" @submit.prevent="loginSubmit()">
         <div class="space-y-2">
           <label for="username">Username</label>
@@ -70,7 +70,7 @@ watch(loginForm.value, () => {
             ** {{ formError.password._errors[0] }} **
           </p>
         </div>
-        <button class="ml-auto rounded-lg mt-8 block bg-green-500 px-4 py-2 text-white">
+        <button class="ml-auto mt-8 block rounded-lg bg-green-500 px-4 py-2 text-white">
           Log in
         </button>
       </form>

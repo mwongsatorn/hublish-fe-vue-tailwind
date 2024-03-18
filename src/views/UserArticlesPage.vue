@@ -37,5 +37,5 @@ totalPages.value = response.data.total_pages
     </PreviewContainer>
     <PaginationController :total_pages="totalPages"> </PaginationController>
   </div>
-  <p class="px-4 text-rose-800 font-bold" v-else>There is no article to display.</p>
+  <p class="px-4 font-bold text-rose-800" v-else>There is no article to display.</p>
 </template>
