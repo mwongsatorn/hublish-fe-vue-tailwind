@@ -3,6 +3,7 @@ import axios from 'axios'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useUserStore } from '@/stores/user.store'
 import { useRouter } from 'vue-router'
+import { useHead } from '@unhead/vue'
 import { type Article } from '@/types/index'
 import { formatDate } from '@/helpers/formatDate'
 import IconEdit from '@/components/icons/Edit.vue'
@@ -59,6 +60,10 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
+})
+
+useHead({
+  title: `${article.value?.title}`
 })
 </script>
 

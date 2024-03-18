@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { useHead } from '@unhead/vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user.store'
 import { type ZodFormattedError } from 'zod'
@@ -36,6 +37,10 @@ watch(loginForm.value, () => {
     formError.value = null
     loginError.value = ''
   }
+})
+
+useHead({
+  title: 'Login'
 })
 </script>
 

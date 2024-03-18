@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useHead } from '@unhead/vue'
 import { CreateArticleSchema, type CreateArticle } from '@/schemas/article'
 import { type ZodFormattedError } from 'zod'
 import axios from 'axios'
@@ -39,6 +40,10 @@ async function createArticleSubmit() {
   alert('Created article successfully')
   router.push({ name: 'ArticleDetails', params: { slug: response.data.slug } })
 }
+
+useHead({
+  title: 'Create Article'
+})
 </script>
 
 <template>

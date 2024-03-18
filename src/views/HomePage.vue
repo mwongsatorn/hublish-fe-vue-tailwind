@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import axios from 'axios'
 import { ref } from 'vue'
+import { useHead } from '@unhead/vue'
 import { type Article } from '@/types/index'
 import ArticlePreview from '@/components/ArticlePreview.vue'
 import PreviewContainer from '@/components/PreviewContainer.vue'
@@ -10,6 +11,10 @@ const latestArticles = ref<Article[] | null>(null)
 const response = await axios.get(`/api/articles`)
 
 latestArticles.value = response.data.results
+
+useHead({
+  title: 'Home'
+})
 </script>
 
 <template>

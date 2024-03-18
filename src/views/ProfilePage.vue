@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import axios from 'axios'
-import { type User } from '@/types/index'
 import { useUserStore } from '@/stores/user.store'
 import { useRouter } from 'vue-router'
+import { useHead } from '@unhead/vue'
+import axios from 'axios'
+import { type User } from '@/types/index'
 import IconWrite from '@/components/icons/Write.vue'
 import IconFollow from '@/components/icons/Follow.vue'
 import IconUnfollow from '@/components/icons/Unfollow.vue'
@@ -43,6 +44,10 @@ async function followHandler() {
     user.value!.followerCount++
   }
 }
+
+useHead({
+  title: `${user.value.name} (@${user.value.username})`
+})
 </script>
 
 <template>

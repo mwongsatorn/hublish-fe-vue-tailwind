@@ -3,6 +3,11 @@ import { RouterView } from 'vue-router'
 import AppHeader from '@/components/AppHeader.vue'
 import AppFooter from '@/components/AppFooter.vue'
 import TransitionFade from './components/TransitionFade.vue'
+import { useHead } from '@unhead/vue'
+
+useHead({
+  titleTemplate: '%s | Hublish'
+})
 </script>
 
 <template>

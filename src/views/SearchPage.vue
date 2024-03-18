@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
+import { useHead } from '@unhead/vue'
 import { onBeforeRouteUpdate, useRoute } from 'vue-router'
 import type { PageResult, Article, ShortUser } from '@/types'
 import AppLink from '@/components/AppLink.vue'
@@ -55,6 +56,10 @@ watch(
   },
   { immediate: true }
 )
+
+useHead({
+  title: () => `Search - ${searchQuery.value}`
+})
 </script>
 
 <template>

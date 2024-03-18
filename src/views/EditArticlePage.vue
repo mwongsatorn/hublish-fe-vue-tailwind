@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useHead } from '@unhead/vue'
 import { EditArticleSchema, type EditArticle } from '@/schemas/article'
 import { type ZodFormattedError } from 'zod'
 import axios from 'axios'
@@ -56,6 +57,10 @@ async function editArticleSubmit() {
   alert('Updated article successfully')
   router.push({ name: 'ArticleDetails', params: { slug: response.data.slug } })
 }
+
+useHead({
+  title: `Edit Article - ${response.data.title}`
+})
 </script>
 
 <template>

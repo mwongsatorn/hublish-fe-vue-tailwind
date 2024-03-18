@@ -2,6 +2,7 @@ import './assets/style.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { createHead } from '@unhead/vue'
 import axios, { AxiosError } from 'axios'
 
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL
@@ -12,9 +13,11 @@ import router from './router'
 import { useUserStore } from './stores/user.store'
 
 const app = createApp(App)
+const head = createHead()
 
 app.use(createPinia())
 app.use(router)
+app.use(head)
 
 const userStore = useUserStore()
 

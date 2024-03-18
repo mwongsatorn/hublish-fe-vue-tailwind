@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useUserStore } from '@/stores/user.store'
+import { useHead } from '@unhead/vue'
 import { type ZodFormattedError } from 'zod'
 import {
   ChangeEmailSchema,
@@ -133,6 +134,10 @@ async function profileSubmit() {
   userStore.user!.bio = validate.data.bio
   userStore.user!.image = validate.data.image || userStore.user!.image
 }
+
+useHead({
+  title: 'Settings'
+})
 </script>
 
 <template>

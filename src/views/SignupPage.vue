@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useHead } from '@unhead/vue'
 import axios from 'axios'
 import { type ZodFormattedError } from 'zod'
 import { SignUpSchema, type SignUp } from '@/schemas/user'
@@ -37,6 +38,10 @@ async function signupSubmit() {
 
 watch(signupForm.value, () => {
   formError.value = null
+})
+
+useHead({
+  title: 'Signup'
 })
 </script>
 
