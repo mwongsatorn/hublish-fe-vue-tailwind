@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user.store'
 import { useHead } from '@unhead/vue'
 import { CreateArticleSchema, type CreateArticle } from '@/schemas/article'
 import { type ZodFormattedError } from 'zod'
 import axios from 'axios'
+import AppLink from '@/components/AppLink.vue'
 
 const router = useRouter()
+const userStore = useUserStore()
 
 const formError = ref<ZodFormattedError<CreateArticle> | null>(null)
 const createArticleError = ref('')
@@ -87,9 +90,21 @@ useHead({
         />
         <p class="text-red-700" v-if="formError?.tags">** {{ formError.tags._errors[0] }} **</p>
       </div>
-      <button type="submit" class="ml-auto mt-8 block rounded-lg bg-green-500 px-4 py-2 text-white">
-        Submit
-      </button>
+
+      <div class="flex items-center justify-end gap-x-4">
+        <button
+          type="submit"
+          class="ml-auto mt-8 block rounded-lg bg-green-500 px-4 py-2 text-white"
+        >
+          Submit
+        </button>
+        <AppLink
+          :to="{ name: 'Profile', params: { username: userStore.user!.username } }"
+          class="mt-8 block rounded-lg bg-rose-500 px-4 py-2 text-white"
+        >
+          Cancel
+        </AppLink>
+      </div>
     </form>
   </div>
 </template>
