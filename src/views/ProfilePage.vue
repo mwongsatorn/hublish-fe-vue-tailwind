@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user.store'
 import { useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { type User } from '@/types/index'
 import IconWrite from '@/components/icons/Write.vue'
 import IconFollow from '@/components/icons/Follow.vue'
@@ -27,8 +27,21 @@ const followStatusIcon = {
   Unfollow: IconUnfollow
 }
 
-const response = await axios.get<User>(`/api/users/${props.username}/profile`)
-user.value = response.data
+try {
+  const response = await axios.get<User>(`/api/users/${props.username}/profile`)
+  user.value = response.data
+} catch (e) {
+  if (e instanceof AxiosError) {
+    if (e.response?.status === 404) {
+      router.push({
+        name: 'NotFound',
+        params: { pathMatch: route.path.substring(1).split('/') },
+        query: route.query,
+        hash: route.hash
+      })
+    }
+  }
+}
 
 async function followHandler() {
   if (!userStore.isLoggedIn) return router.push({ name: 'Login' })
@@ -46,12 +59,12 @@ async function followHandler() {
 }
 
 useHead({
-  title: `${user.value.name} (@${user.value.username})`
+  title: () => `${user.value?.name} (@${user.value?.username})`
 })
 </script>
 
 <template>
-  <div class="mx-auto min-h-[calc(100vh-56px)] max-w-7xl bg-white">
+  <div v-if="user" class="mx-auto min-h-[calc(100vh-56px)] max-w-7xl bg-white">
     <section>
       <div class="h-[250px] bg-gradient-to-r from-green-700 to-green-400 opacity-75"></div>
 
