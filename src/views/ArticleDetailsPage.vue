@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useUserStore } from '@/stores/user.store'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { type Article } from '@/types/index'
 import { formatDate } from '@/helpers/formatDate'
@@ -14,15 +14,27 @@ import ArticleCommentSection from '@/components/ArticleCommentSection.vue'
 import AppLink from '@/components/AppLink.vue'
 
 const props = defineProps<{ slug: string }>()
+const route = useRoute()
 const router = useRouter()
 const article = ref<Article | null>(null)
 const userStore = useUserStore()
 const isMenuOpened = ref(false)
 const menu = ref<HTMLElement | null>(null)
 
-const response = await axios.get<Article>(`/api/articles/${props.slug}`)
-if (response.status === 200) {
+try {
+  const response = await axios.get<Article>(`/api/articles/${props.slug}`)
   article.value = response.data
+} catch (e) {
+  if (e instanceof AxiosError) {
+    if (e.response?.status === 404) {
+      router.push({
+        name: 'NotFound',
+        params: { pathMatch: route.path.substring(1).split('/') },
+        query: route.query,
+        hash: route.hash
+      })
+    }
+  }
 }
 
 async function deleteArticle() {
@@ -68,7 +80,7 @@ useHead({
 </script>
 
 <template>
-  <div class="mx-auto min-h-[calc(100vh-56px)] max-w-2xl divide-y-2 bg-white">
+  <div v-if="article" class="mx-auto min-h-[calc(100vh-56px)] max-w-2xl divide-y-2 bg-white">
     <section class="px-4 py-8">
       <div class="space-y-4">
         <h1 class="text-3xl font-bold">{{ article?.title }}</h1>
